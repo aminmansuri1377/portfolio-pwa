@@ -18,10 +18,10 @@ export default function Home() {
         <link rel="icon" href="/fav.png" />
       </Head>
       <Main />
+      <Projects />
       <About />
       <Resumee />
       <Skills />
-      <Projects />
       <Contact />
     </div>
   );

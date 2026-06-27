@@ -27,7 +27,7 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <h2 className="py-2">Mohammad Amin Mansury</h2>
+                <h2 className="py-2">Mohamad Amin Mansori</h2>
                 <p>Front-End Developer</p>
                 <p className="py-4">
                   I am available for freelance or half-time and remote
