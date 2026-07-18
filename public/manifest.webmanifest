@@ -4,6 +4,7 @@
   "description": "Portfolio of Mohamad Amin Mansori, a front-end web developer specializing in responsive, exceptional digital experiences.",
   "start_url": "/",
   "scope": "/",
+  "id": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ecf0f3",
@@ -29,12 +30,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "/favicon.ico",
-      "sizes": "256x256 128x128 96x96 64x64 48x48 32x32 16x16",
-      "type": "image/x-icon",
-      "purpose": "any"
     }
   ],
   "shortcuts": [

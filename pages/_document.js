@@ -22,6 +22,22 @@ export default function Document() {
       <body>
         <Main />
         <NextScript />
+        {/* Register the service worker as early as possible (before React
+            hydrates) so PWA auditors like Lighthouse/PWABuilder detect it
+            within their short check window. Rendered as an external file so
+            it runs synchronously after the page HTML loads. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if('serviceWorker' in navigator){" +
+              "window.addEventListener('load',function(){" +
+              "navigator.serviceWorker.register('/sw.js').catch(function(e){" +
+              "console.warn('SW registration failed:',e)" +
+              "})" +
+              "})" +
+              "}",
+          }}
+        />
       </body>
     </Html>
   )
