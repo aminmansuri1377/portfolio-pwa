@@ -65,7 +65,7 @@ const Resumee = () => {
           operations. Diverse analytical skills, team collaboration. Consummate
           professional, and motivated leader, with solid interpersonal abilities
           and complex problem-solving skills. Effective and proven track record
-          of critical thinking, idea generation, and optimizing efficiencies.
+          of critical thinking, idea generation, and optimizing efficiencies.---
         </p>
 
         {/* Skills */}
