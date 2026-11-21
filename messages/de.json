@@ -1,0 +1,254 @@
+{
+  "Meta": {
+    "title": "Mohamad Amin Mansori — Frontend-Entwickler · React & Next.js",
+    "description": "Portfolio von Mohamad Amin Mansori: Frontend-Entwickler mit über fünf Jahren Erfahrung in React, Next.js, TypeScript und Three.js. Verfügbar für Positionen in Deutschland – remote oder vor Ort."
+  },
+  "Nav": {
+    "about": "Über mich",
+    "skills": "Skills",
+    "experience": "Erfahrung",
+    "projects": "Projekte",
+    "contact": "Kontakt",
+    "cv": "Lebenslauf",
+    "language": "Sprache wechseln",
+    "menu": "Menü öffnen",
+    "close": "Menü schließen"
+  },
+  "Hero": {
+    "badge": "Offen für neue Positionen in Deutschland",
+    "greeting": "Hallo, ich bin",
+    "name": "Mohamad Amin Mansori",
+    "titleA": "Ich baue Interfaces,",
+    "titleB": "die im Kopf bleiben.",
+    "roles": ["Frontend-Entwickler", "React- & Next.js-Spezialist", "Creative Developer", "TypeScript-Enthusiast"],
+    "subtitle": "Frontend-Entwickler mit über fünf Jahren Erfahrung: Ich verbinde präzisen, wartbaren Code mit durchdachtem Design – von E-Commerce-Plattformen über Dashboards bis zu interaktiven 3D-Erlebnissen im Browser.",
+    "ctaProjects": "Projekte entdecken",
+    "ctaContact": "Kontakt aufnehmen",
+    "stats": [
+      { "value": "5+", "label": "Jahre Erfahrung" },
+      { "value": "6", "label": "ausgewählte Projekte" },
+      { "value": "20+", "label": "Technologien im Einsatz" }
+    ],
+    "scroll": "Scrollen",
+    "scene": "Interaktives 3D-Objekt – reagiert auf Maus und Scroll"
+  },
+  "Marquee": {
+    "items": ["React", "Next.js", "TypeScript", "Three.js", "Tailwind CSS", "Angular", "GSAP", "Framer Motion", "Prisma", "tRPC", "Recoil", "Material UI", "GitLab CI", "Vercel"]
+  },
+  "About": {
+    "kicker": "01 — Über mich",
+    "title": "Entwickler aus Überzeugung. Ingenieur im Denken.",
+    "p1": "Ich bin Mohamad Amin Mansori, Frontend-Entwickler mit Schwerpunkt auf React, Next.js und TypeScript. Seit 2020 entwickle ich Webanwendungen – vom ersten Praktikum über zwei Jahre Produktentwicklung bei Batriders bis zur eigenverantwortlichen Umsetzung kompletter Full-Stack-Projekte.",
+    "p2": "Mein Studium des Industrial Engineering prägt meine Arbeitsweise: Ich denke in Prozessen, messe Ergebnisse und löse Probleme strukturiert. In der Zusammenarbeit mit Backend-Teams, Designern und Kunden fühle ich mich zu Hause – klare Kommunikation, saubere Schnittstellen und verlässliche Übergaben.",
+    "p3": "Aktuell suche ich eine neue Herausforderung in Deutschland, remote oder vor Ort. Ich möchte mein Know-how in ein starkes Team einbringen und gemeinsam Produkte bauen, die Nutzer wirklich gern benutzen.",
+    "photoAlt": "Porträt von Mohamad Amin Mansori",
+    "badge": "5+ Jahre Erfahrung",
+    "facts": ["React · Next.js · TypeScript", "B.Sc. Industrial Engineering", "Iran · offen für Deutschland & Remote"],
+    "highlights": [
+      { "title": "Performance & Qualität", "text": "Saubere Komponenten-Architektur, TypeScript, Testing und optimierte Ladezeiten – messbar an den Core Web Vitals." },
+      { "title": "Design & Motion", "text": "Von der Wireframe-Idee bis zum polierten UI: Tailwind CSS, Material UI, GSAP, Framer Motion und Three.js." },
+      { "title": "Zusammenarbeit", "text": "Erfahrung mit Git, GitLab, CI/CD, Code-Reviews und direkter Kundenkommunikation – auf Englisch und Persisch." }
+    ]
+  },
+  "Skills": {
+    "kicker": "02 — Skills",
+    "title": "Werkzeuge, die ich beherrsche.",
+    "subtitle": "Ein Stack für moderne Webprodukte – von der ersten Komponente bis zum Deployment.",
+    "categories": {
+      "core": "Sprachen & Grundlagen",
+      "frameworks": "Frameworks & State",
+      "ui": "UI, Motion & 3D",
+      "tools": "Workflow & Design"
+    }
+  },
+  "Experience": {
+    "kicker": "03 — Erfahrung",
+    "title": "Stationen & Meilensteine.",
+    "items": [
+      {
+        "period": "2023 – heute",
+        "role": "Full-Stack-Entwickler",
+        "company": "Freelance & eigene Projekte",
+        "bullets": [
+          "Entwicklung vollständiger Produkte mit Next.js, Prisma, tRPC und Supabase – inklusive 3D-Features mit Three.js.",
+          "Konzeption und Umsetzung von Dashboards, Authentifizierung mit next-auth und Mehrsprachigkeit.",
+          "Testing, Debugging und Deployment auf eigenen Domains mit Vercel und CI/CD."
+        ]
+      },
+      {
+        "period": "2021 – 2023",
+        "role": "Frontend-Entwickler",
+        "company": "Batriders",
+        "bullets": [
+          "Entwicklung responsiver Web-Apps mit React, Next.js und TypeScript.",
+          "UI-Umsetzung mit Material UI und Tailwind CSS.",
+          "Debugging, Testing und Deployment des Frontend-Codes."
+        ]
+      },
+      {
+        "period": "2020 · 9 Monate",
+        "role": "Junior Frontend-Entwickler (Praktikum)",
+        "company": "Novin Rayan Gostar Alborz",
+        "bullets": [
+          "Einstieg in die professionelle Webentwicklung mit HTML, CSS und JavaScript.",
+          "Mitarbeit an echten Kundenprojekten unter Anleitung erfahrener Entwickler."
+        ]
+      }
+    ],
+    "eduTitle": "Ausbildung",
+    "degree": "B.Sc. Industrial Engineering",
+    "school": "Azad-Universität Karaj, Iran",
+    "eduNote": "Analytisches Denken, Prozessoptimierung und strukturierte Problemlösung – das Fundament meiner Arbeit als Entwickler."
+  },
+  "Projects": {
+    "kicker": "04 — Projekte",
+    "title": "Ausgewählte Arbeiten.",
+    "subtitle": "Sechs Projekte, die zeigen, wie ich denke und baue. Dieser Bereich wächst kontinuierlich – neue Projekte folgen.",
+    "viewCase": "Case Study ansehen",
+    "github": "Weitere Projekte auf GitHub",
+    "types": { "client": "Auftragsprojekt", "own": "Eigenprojekt", "study": "UI-Studie" },
+    "cases": {
+      "shoplon": {
+        "title": "Shoplon",
+        "tagline": "Social-Commerce-Plattform, die Instagram-Shops in vollwertige Verkaufsplattformen verwandelt.",
+        "role": "Frontend-Entwickler",
+        "overview": "Shoplon verbindet Instagram-Seiten mit einem modernen Online-Shop: Nutzer entdecken Produkte, folgen Shops, chatten, kommentieren und kaufen – alles in einer schnellen, mobilen Oberfläche.",
+        "challenge": "Eine Oberfläche, die sich wie ein soziales Netzwerk anfühlt, aber die Zuverlässigkeit eines Shops bietet: Infinite Scroll, Echtzeit-Chat, Profile, Suche und Kommentare – ohne Performance-Einbußen.",
+        "solution": "Umsetzung mit Next.js und TypeScript, Tailwind CSS für ein konsistentes UI und Recoil für feingranulares State-Management. REST-APIs werden über Axios angebunden; Infinite Scroll und Code-Splitting halten die App schnell.",
+        "outcome": "Eine produktive Plattform, die Händlern einen deutlich einfacheren Verkauf über Social Media ermöglicht – mit einer Buyer-Experience, die sich nativ anfühlt.",
+        "features": ["Instagram-Anbindung für Shops", "Infinite Scroll & Produktsuche", "Profile, Follow & Kommentare", "Chat zwischen Käufern und Verkäufern", "Login & Nutzerverwaltung"]
+      },
+      "magreach": {
+        "title": "MagReach Dashboard",
+        "tagline": "Admin- und Advertiser-Dashboard für eine Finanzdienstleistungs-App.",
+        "role": "Frontend-Entwickler",
+        "overview": "MagReach bündelt die Verwaltung einer Finanz-App in einem Dashboard: Wallet-Management, Nutzer- und Werbetreibenden-Verwaltung inklusive deren Social-Kanälen sowie Auswertungen für datenbasierte Entscheidungen.",
+        "challenge": "Komplexe Geschäftslogik – Wallets, Rollen, Werbetreibende und deren Social-Accounts – in einer Oberfläche, die für das Team schnell und fehlerfrei bedienbar bleibt.",
+        "solution": "Next.js mit Material UI und Tailwind CSS, Recoil für den App-State und React Hook Form für robuste, validierte Formulare. next-auth sichert den Zugriff ab.",
+        "outcome": "Das Team verwaltet Kampagnen, Nutzer und Auswertungen an einem Ort – mit deutlich weniger manuellem Aufwand und klareren Entscheidungsgrundlagen.",
+        "features": ["Wallet- & Transaktionsübersicht", "Nutzer- und Rollenverwaltung", "Werbetreibende inkl. Social-Accounts", "Validierte Formulare mit React Hook Form", "Gesicherter Login mit next-auth"]
+      },
+      "gameplanet": {
+        "title": "GamePlanet",
+        "tagline": "Full-Stack-Mietshop für Spielekonsolen – mit 3D-Produktansicht im Browser.",
+        "role": "Full-Stack-Entwickler",
+        "overview": "GamePlanet vermietet Spielekonsolen: Nutzer stöbern im Katalog, betrachten Produkte in 3D und bestellen. Ein vollständiges Dashboard verwaltet Produkte, Bestellungen und Nutzer; die Oberfläche ist mehrsprachig.",
+        "challenge": "Ein Miet-Shop, der mehr kann als Standard: 3D-Produktansichten, durchgängige Typsicherheit von der Datenbank bis zur UI und ein Dashboard für den gesamten Bestellprozess.",
+        "solution": "Next.js und TypeScript als Fundament, Prisma + tRPC für typsichere APIs, Supabase als Datenbank, next-auth für Login und Three.js für die interaktive Produktansicht. i18next macht die App international.",
+        "outcome": "Ein komplettes Full-Stack-Produkt, das Design, 3D und saubere Architektur verbindet – deployt auf Vercel und bereit für echte Nutzer.",
+        "features": ["3D-Produktansicht mit Three.js", "Typsichere API mit Prisma & tRPC", "Dashboard für Produkte, Bestellungen & Nutzer", "Authentifizierung mit next-auth", "Mehrsprachig mit i18next"]
+      },
+      "zinamatv": {
+        "title": "ZinemaTV",
+        "tagline": "VOD-Plattform mit Custom-Video-Player und Rollen-Dashboard für drei Nutzertypen.",
+        "role": "Frontend-Entwickler",
+        "overview": "ZinemaTV ist eine Video-on-Demand-Plattform mit eigens entwickeltem Player. Das von mir gebaute Dashboard bedient drei Rollen – Management, Mitarbeiter und Publisher – und steuert alle Inhalte der Hauptwebsite.",
+        "challenge": "Ein Redaktionssystem, das drei sehr unterschiedliche Nutzergruppen abbildet und trotzdem intuitiv bleibt: Filme, Nutzer und Website-Sektionen zentral verwalten.",
+        "solution": "React und Material UI für das Dashboard, Next.js und Tailwind für die Plattform, Recoil für den State und next-auth für die Rollen. Der Custom-Player ist auf die Anforderungen der Plattform zugeschnitten.",
+        "outcome": "Das Team pflegt Katalog, Nutzer und Website-Inhalte vollständig selbst – ohne Entwickler-Engagement im Tagesgeschäft.",
+        "features": ["Custom-Video-Player", "Dashboard für 3 Rollen", "Verwaltung von Filmen & Nutzern", "Steuerung aller Website-Sektionen", "Rollenbasierter Zugriff mit next-auth"]
+      },
+      "rentta": {
+        "title": "Rentta",
+        "tagline": "Miet-Marktplatz, der Vermieter und Mieter zusammenbringt – mit Karte und Dashboard.",
+        "role": "Full-Stack-Entwickler",
+        "overview": "Rentta verbindet Menschen, die Dinge vermieten, mit denen, die sie brauchen: Angebote auf der Karte entdecken, anfragen, verwalten. Ein Dashboard steuert Angebote, Bestellungen und Nutzer.",
+        "challenge": "Ein zweiseitiger Marktplatz mit Geo-Bezug: Angebote müssen auffindbar, Anfragen nachvollziehbar und Verwaltungsprozesse für beide Seiten einfach sein.",
+        "solution": "Next.js + Prisma + tRPC als typsicherer Full-Stack-Unterbau, Supabase für Daten, Leaflet für die Kartenansicht, next-auth für Login und i18next für Mehrsprachigkeit.",
+        "outcome": "Eine vollständige Plattform von der Idee bis zum Deployment – mit Karten-Suche, Dashboard und sauberer API-Architektur.",
+        "features": ["Kartenansicht mit Leaflet", "Angebote erstellen & verwalten", "Anfragen & Bestellungen", "Typsichere API mit tRPC", "Mehrsprachige Oberfläche"]
+      },
+      "twitch": {
+        "title": "Twitch UI",
+        "tagline": "UI-Studie: responsiver Nachbau des Twitch-Interfaces mit OAuth-Login.",
+        "role": "Frontend-Entwickler",
+        "overview": "Eine Lern- und Designstudie: Das Interface von Twitch.tv wird responsiv nachgebaut – inklusive Login über GitHub und Google. Der Fokus liegt auf Layout, Wiederverwendbarkeit und Authentifizierungs-Flows.",
+        "challenge": "Ein komplexes, dichtes UI wie Twitch sauber in Komponenten zerlegen und dabei Responsiveness und Performance erhalten.",
+        "solution": "Next.js mit Tailwind CSS für das Layout, next-auth für OAuth (GitHub & Google) und die Next.js Image-Komponente für optimiertes Lazy Loading.",
+        "outcome": "Eine Studie, die zeigt, wie ich komplexe Interfaces analysiere, in Komponenten überführe und Auth-Flows korrekt umsetze.",
+        "features": ["Responsiver Twitch-Nachbau", "OAuth mit GitHub & Google", "Optimiertes Image-Lazy-Loading", "Wiederverwendbare Komponenten"]
+      }
+    }
+  },
+  "Case": {
+    "back": "Zurück zu den Projekten",
+    "overview": "Überblick",
+    "challenge": "Herausforderung",
+    "solution": "Lösung",
+    "outcome": "Ergebnis",
+    "features": "Funktionen",
+    "stack": "Tech-Stack",
+    "role": "Rolle",
+    "type": "Typ",
+    "live": "Live-Demo öffnen",
+    "noLive": "Für dieses Projekt ist keine öffentliche Demo verfügbar.",
+    "gallery": "Einblicke",
+    "prev": "Vorheriges Projekt",
+    "next": "Nächstes Projekt"
+  },
+  "Contact": {
+    "kicker": "05 — Kontakt",
+    "title": "Lassen Sie uns etwas Großartiges bauen.",
+    "text": "Ich suche eine Frontend-Position in Deutschland – remote oder vor Ort – und bin auch für spannende Freelance-Projekte offen. Schreiben Sie mir: Ich antworte in der Regel innerhalb von 48 Stunden.",
+    "availability": "Ab sofort verfügbar",
+    "cta": "E-Mail schreiben",
+    "email": "E-Mail",
+    "phone": "Telefon / WhatsApp",
+    "github": "GitHub",
+    "linkedin": "LinkedIn",
+    "location": "Standort",
+    "locationValue": "Iran · verfügbar für Deutschland & Remote",
+    "copy": "Kopieren",
+    "copied": "Kopiert!"
+  },
+  "Footer": {
+    "tagline": "Frontend-Entwickler für durchdachte, lebendige Webprodukte.",
+    "navigation": "Navigation",
+    "rights": "Alle Rechte vorbehalten.",
+    "builtWith": "Entwickelt mit Next.js, Three.js, Tailwind CSS & next-intl.",
+    "impressum": "Impressum",
+    "privacy": "Datenschutz",
+    "top": "Nach oben"
+  },
+  "CV": {
+    "title": "Lebenslauf",
+    "print": "Als PDF drucken",
+    "request": "PDF per E-Mail anfordern",
+    "profile": "Profil",
+    "profileText": "Frontend-Entwickler mit über fünf Jahren Erfahrung in React, Next.js und TypeScript. Ich verbinde ingenieurhaftes, strukturiertes Denken mit einem Auge für Design und Motion – und suche ein Team in Deutschland, in dem ich diese Stärke einbringen kann.",
+    "skills": "Skills",
+    "languages": "Sprachen",
+    "langItems": [
+      { "name": "Persisch", "level": "Muttersprache" },
+      { "name": "Englisch", "level": "Fließend in Wort und Schrift" }
+    ]
+  },
+  "Impressum": {
+    "title": "Impressum",
+    "notice": "Hinweis: Die folgenden Angaben sind Platzhalter und müssen vor der Veröffentlichung durch echte Kontaktdaten ersetzt werden.",
+    "contactH": "Kontakt",
+    "blocks": [
+      { "h": "Angaben gemäß § 5 DDG", "p": "Mohamad Amin Mansori\n[Straße und Hausnummer]\n[PLZ und Ort]\n[Land]" },
+      { "h": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV", "p": "Mohamad Amin Mansori\n[Anschrift wie oben]" },
+      { "h": "Haftung für Inhalte", "p": "Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden." },
+      { "h": "Haftung für Links", "p": "Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte kein Einfluss besteht. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter verantwortlich." }
+    ]
+  },
+  "Privacy": {
+    "title": "Datenschutzerklärung",
+    "updated": "Stand: November 2026",
+    "blocks": [
+      { "h": "1. Verantwortlicher", "p": "Verantwortlich für die Datenverarbeitung auf dieser Website ist Mohamad Amin Mansori. Die Kontaktdaten finden Sie im Impressum." },
+      { "h": "2. Hosting", "p": "Diese Website wird bei Vercel Inc. gehostet. Beim Aufruf der Seiten werden durch den Hoster technisch notwendige Server-Logdaten (z. B. IP-Adresse, Zeitpunkt, angeforderte Datei) verarbeitet, um den Betrieb und die Sicherheit zu gewährleisten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO." },
+      { "h": "3. Keine Cookies, kein Tracking", "p": "Diese Website setzt keine Analyse- oder Marketing-Cookies ein und verwendet keine Tracking-Dienste. Es werden keine Nutzungsprofile erstellt." },
+      { "h": "4. Schriftarten", "p": "Verwendete Schriftarten werden lokal über den Next.js-Font-Mechanismus ausgeliefert. Es besteht keine Verbindung zu Google-Font-Servern." },
+      { "h": "5. Kontaktaufnahme", "p": "Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben zur Bearbeitung der Anfrage verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b bzw. f DSGVO. Die Daten werden gelöscht, sobald sie nicht mehr erforderlich sind." },
+      { "h": "6. Ihre Rechte", "p": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Zudem steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu." }
+    ]
+  },
+  "NotFound": {
+    "title": "Seite nicht gefunden",
+    "text": "Diese Seite existiert nicht oder wurde verschoben. Vielleicht finden Sie über die Startseite, was Sie suchen.",
+    "home": "Zur Startseite"
+  }
+}

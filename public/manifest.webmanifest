@@ -1,15 +1,15 @@
 {
-  "name": "Amin Mansori — Front-End Developer",
+  "name": "Mohamad Amin Mansori — Frontend-Entwickler",
   "short_name": "Amin",
-  "description": "Portfolio of Mohamad Amin Mansori, a front-end web developer specializing in responsive, exceptional digital experiences.",
+  "description": "Portfolio von Mohamad Amin Mansori – Frontend-Entwickler für React, Next.js, TypeScript und Three.js.",
   "start_url": "/",
   "scope": "/",
   "id": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#ecf0f3",
-  "theme_color": "#5651e5",
-  "lang": "en",
+  "background_color": "#060609",
+  "theme_color": "#060609",
+  "lang": "de",
   "dir": "ltr",
   "categories": ["portfolio", "developer", "personal"],
   "icons": [
@@ -34,21 +34,21 @@
   ],
   "shortcuts": [
     {
-      "name": "Resume",
-      "short_name": "Resume",
-      "description": "View Amin's resume",
-      "url": "/resume"
+      "name": "Lebenslauf",
+      "short_name": "CV",
+      "description": "Lebenslauf ansehen",
+      "url": "/cv"
     },
     {
-      "name": "Projects",
-      "short_name": "Projects",
-      "description": "View featured projects",
+      "name": "Projekte",
+      "short_name": "Projekte",
+      "description": "Ausgewählte Projekte ansehen",
       "url": "/#projects"
     },
     {
-      "name": "Contact",
-      "short_name": "Contact",
-      "description": "Get in touch",
+      "name": "Kontakt",
+      "short_name": "Kontakt",
+      "description": "Kontakt aufnehmen",
       "url": "/#contact"
     }
   ]

@@ -11,7 +11,7 @@
  * Bump CACHE_VERSION whenever you ship a breaking SW change; the activate
  * step will delete old caches.
  */
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const STATIC_CACHE = `amin-static-${CACHE_VERSION}`;
 const PAGE_CACHE = `amin-pages-${CACHE_VERSION}`;
 

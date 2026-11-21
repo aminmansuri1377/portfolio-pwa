@@ -1,30 +1,45 @@
-import Head from "next/head";
-import About from "../components/About";
-import Contact from "../components/Contact";
-import Main from "../components/Main";
-import Projects from "../components/Projects";
-import Skills from "../components/Skills";
-import Resumee from "../components/Resumee";
+import Head from 'next/head';
+import { useTranslations } from 'next-intl';
+import Seo from '../components/Seo';
+import Hero from '../components/sections/Hero';
+import Marquee from '../components/sections/Marquee';
+import About from '../components/sections/About';
+import Skills from '../components/sections/Skills';
+import Experience from '../components/sections/Experience';
+import Projects from '../components/sections/Projects';
+import Contact from '../components/sections/Contact';
+import { SITE } from '../lib/site';
 
 export default function Home() {
+  const t = useTranslations('Meta');
+  const person = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.name,
+    url: SITE.url,
+    jobTitle: 'Frontend Developer',
+    email: `mailto:${SITE.email}`,
+    sameAs: [SITE.github, SITE.linkedin],
+    knowsAbout: ['React', 'Next.js', 'TypeScript', 'Three.js', 'Tailwind CSS'],
+    description: t('description'),
+  };
+
   return (
-    <div>
+    <>
+      <Seo />
       <Head>
-        <title>Amin | Front-End Developer</title>
-        <meta
-          name="description"
-          content="I’m a front-end web developer specializing in building (and occasionally designing) exceptional digital experiences."
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }}
         />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/favicon.ico" />
       </Head>
-      <Main />
-      <Projects />
+      <Hero />
+      <Marquee />
       <About />
-      <Resumee />
       <Skills />
+      <Experience />
+      <Projects />
       <Contact />
-    </div>
+    </>
   );
 }

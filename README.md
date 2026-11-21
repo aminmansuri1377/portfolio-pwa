@@ -1,34 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Portfolio — Mohamad Amin Mansori
 
-## Getting Started
+Personal portfolio website, built for the German job market. Bilingual
+(German / English), dark editorial design, interactive 3D hero and
+scroll-driven motion. Installable as a PWA.
 
-First, run the development server:
+## Tech stack
+
+- **Next.js 14** (Pages Router) + **React 18**
+- **next-intl** — i18n with `de` (default) and `en` locales
+- **Tailwind CSS 3** — design system (ink / lime / violet)
+- **Three.js** via `@react-three/fiber` + `@react-three/drei` — hero scene
+- **Framer Motion** — reveal, parallax and micro-interactions
+- **Lenis** — smooth scrolling
+- `next/font` — self-hosted Google fonts (DSGVO-friendly, no external requests)
+
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 (German) or http://localhost:3000/en (English).
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+> The first build downloads fonts via `next/font`, so it needs internet access.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Structure
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+- `messages/de.json`, `messages/en.json` — all copy in both languages
+- `lib/projects.js` — project data (add new projects here)
+- `lib/skills.js` — skill groups and icons
+- `components/sections/*` — homepage sections
+- `components/three/HeroScene.jsx` — the 3D hero (lazy-loaded, reduced-motion aware)
+- `pages/projects/[slug].jsx` — case-study pages
+- `pages/cv.jsx` — printable CV (Lebenslauf)
 
-## Learn More
+## Adding a new project
 
-To learn more about Next.js, take a look at the following resources:
+1. Add an entry to `lib/projects.js` (images go to `public/assets/projects/`).
+2. Add the copy under `Projects.cases.<slug>` in **both** message files.
+3. The card, case-study page and routing are generated automatically.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Legal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+`pages/impressum.jsx` and `pages/datenschutz.jsx` contain placeholders that
+must be replaced with real contact details before going live.
