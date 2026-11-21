@@ -106,12 +106,9 @@ const Resumee = () => {
           <p className="py-1 italic">Full-stack Web Developer (2023 - 2026)</p>
           <ul className="list-disc list-outside px-7 py-1 leading-relaxed">
             <li>Build apps with Prisma and tRPC also work with three.js .</li>
+            <li>Build applications and offline apps with Next.js & tuari.</li>
             <li>
-              Build fullstack applications and offline apps with Next.js &
-              tuari.
-            </li>
-            <li>
-              debug , testing and deploying front-end projects in real domains.
+              debug , testing and deploying fullstack projects in real domains.
             </li>
           </ul>
         </div>
