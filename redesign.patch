@@ -1,0 +1,2894 @@
+# Portfolio redesign — Mohamad Amin Mansori (DE/EN, Next 14, Three.js, next-intl)
+# Apply with: git apply --recount --whitespace=nowarn redesign.patch
+# Based on commit 4ad57ed (main) of aminmansuri1377/portfolio-pwa
+diff --git a/package.json b/package.json
+index 532460c..532460c 100644
+--- a/package.json
++++ b/package.json
+@@ -1,27 +1,33 @@
+ {
+   "name": "portfolio-nextjs",
+-  "version": "0.1.0",
++  "version": "2.0.0",
+   "private": true,
+   "scripts": {
+     "dev": "next dev",
+     "build": "next build",
+     "start": "next start",
+     "lint": "next lint"
+   },
+   "dependencies": {
+-    "gh-pages": "^4.0.0",
+-    "next": "12.1.6",
+-    "react": "18.1.0",
+-    "react-dom": "18.1.0",
+-    "react-icons": "^4.3.1"
++    "@react-three/drei": "^9.114.3",
++    "@react-three/fiber": "^8.17.10",
++    "framer-motion": "^11.11.0",
++    "lenis": "^1.1.14",
++    "next": "^14.2.5",
++    "next-intl": "^3.26.0",
++    "react": "^18.3.1",
++    "react-dom": "^18.3.1",
++    "react-icons": "^5.3.0",
++    "three": "^0.169.0"
+   },
+   "devDependencies": {
+-    "autoprefixer": "^10.4.7",
+-    "eslint": "8.15.0",
+-    "eslint-config-next": "12.1.6",
+-    "postcss": "^8.4.13",
+-    "tailwindcss": "^3.0.24"
++    "autoprefixer": "^10.4.20",
++    "eslint": "^8.57.1",
++    "eslint-config-next": "^14.2.5",
++    "postcss": "^8.4.47",
++    "tailwindcss": "^3.4.14"
+   }
+ }
+diff --git a/next.config.js b/next.config.js
+index c1c1519..c1c1519 100644
+--- a/next.config.js
++++ b/next.config.js
+@@ -1,9 +1,21 @@
+ /** @type {import('next').NextConfig} */
+ const nextConfig = {
+   reactStrictMode: true,
+-  experimental: {
+-    scrollRestoration: true,
++  i18n: {
++    locales: ['de', 'en'],
++    defaultLocale: 'de',
++  },
++  async redirects() {
++    return [
++      { source: '/resume', destination: '/cv', permanent: false },
++      { source: '/shoplon', destination: '/projects/shoplon', permanent: false },
++      { source: '/magreach', destination: '/projects/magreach', permanent: false },
++      { source: '/gamePlanet', destination: '/projects/gameplanet', permanent: false },
++      { source: '/zinamatv', destination: '/projects/zinamatv', permanent: false },
++      { source: '/rentta', destination: '/projects/rentta', permanent: false },
++      { source: '/twitch', destination: '/projects/twitch', permanent: false },
++    ];
+   },
+ };
+ 
+ module.exports = nextConfig;
+diff --git a/tailwind.config.js b/tailwind.config.js
+index 1e244f0..1e244f0 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,11 +1,33 @@
+ module.exports = {
+   content: [
+     './pages/**/*.{js,ts,jsx,tsx}',
+     './components/**/*.{js,ts,jsx,tsx}',
+   ],
+   theme: {
+-    extend: {},
++    extend: {
++      colors: {
++        ink: { 950: '#060609', 900: '#0c0c12', 800: '#14141c' },
++        lime: { DEFAULT: '#bfff3c' },
++        violet: { DEFAULT: '#8b7cff' },
++        muted: '#9c9ca8',
++      },
++      fontFamily: {
++        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
++        sans: ['var(--font-body)', 'system-ui', 'sans-serif'],
++        mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
++      },
++      boxShadow: {
++        glow: '0 0 44px -12px rgba(191, 255, 60, 0.5)',
++      },
++      keyframes: {
++        marquee: {
++          from: { transform: 'translateX(0)' },
++          to: { transform: 'translateX(-50%)' },
++        },
++      },
++      animation: {
++        marquee: 'marquee 36s linear infinite',
++      },
++    },
+   },
+   plugins: [],
+ };
+diff --git a/styles/globals.css b/styles/globals.css
+index 9ffd73e..9ffd73e 100644
+--- a/styles/globals.css
++++ b/styles/globals.css
+@@ -1,75 +1,118 @@
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+-@import url("https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap");
+-
+-html {
+-  scroll-behavior: smooth;
+-  font-family: "Raleway", sans-serif;
+-}
+-
+-@layer base {
+-  body {
+-    @apply bg-[#ecf0f3] text-[#1f2937] tracking-wide;
+-  }
+-
+-  h1,
+-  h2,
+-  h3,
+-  h4,
+-  h5,
+-  h6 {
+-    @apply font-bold;
+-  }
+-
+-  h1 {
+-    @apply text-4xl sm:text-5xl md:text-6xl font-[Raleway];
+-  }
+-
+-  h2 {
+-    @apply text-3xl sm:text-4xl;
+-  }
+-
+-  li {
+-    @apply cursor-pointer;
+-  }
+-
+-  button {
+-    @apply shadow-xl shadow-gray-400 rounded-xl uppercase bg-gradient-to-r from-[#5651e5] to-[#709dff] text-white;
+-  }
+-  .marquee-track {
+-    width: max-content;
+-    animation: scrollProjects 30s linear infinite;
+-  }
+-
+-  .marquee-track:hover {
+-    animation-play-state: paused;
+-  }
+-
+-  @keyframes scrollProjects {
+-    from {
+-      transform: translateX(0);
+-    }
+-
+-    to {
+-      transform: translateX(-50%);
+-    }
+-  }
+-  .scrollbar-hide::-webkit-scrollbar {
+-    display: none;
+-  }
+-
+-  .scrollbar-hide {
+-    -ms-overflow-style: none;
+-    scrollbar-width: none;
+-  }
+-}
++:root {
++  --bg: #060609;
++  --surface: #0c0c12;
++  --line: rgba(255, 255, 255, 0.08);
++  --accent: #bfff3c;
++  --accent-2: #8b7cff;
++  --text: #f4f4f0;
++  --muted: #9c9ca8;
++}
++
++html {
++  scroll-behavior: smooth;
++}
++
++html.lenis,
++html.lenis body {
++  height: auto;
++}
++
++.lenis.lenis-smooth {
++  scroll-behavior: auto !important;
++}
++
++body {
++  background: var(--bg);
++  color: var(--text);
++  font-family: var(--font-body), system-ui, sans-serif;
++  -webkit-font-smoothing: antialiased;
++  overflow-x: hidden;
++}
++
++::selection {
++  background: var(--accent);
++  color: #060609;
++}
++
++::-webkit-scrollbar {
++  width: 10px;
++}
++::-webkit-scrollbar-track {
++  background: var(--bg);
++}
++::-webkit-scrollbar-thumb {
++  background: #26262f;
++  border-radius: 8px;
++}
++::-webkit-scrollbar-thumb:hover {
++  background: #3a3a46;
++}
++
++:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 3px;
++  border-radius: 4px;
++}
++
++@layer components {
++  .container-x {
++    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
++  }
++  .glass {
++    @apply border border-white/10 bg-white/[0.04] backdrop-blur-md;
++  }
++  .chip {
++    @apply inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 font-mono text-[11px] text-muted;
++  }
++  .text-gradient {
++    @apply bg-gradient-to-r from-lime via-lime to-violet bg-clip-text text-transparent;
++  }
++  .grid-bg {
++    background-image: linear-gradient(var(--line) 1px, transparent 1px),
++      linear-gradient(90deg, var(--line) 1px, transparent 1px);
++    background-size: 56px 56px;
++    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
++    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
++  }
++  .noise {
++    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
++    opacity: 0.035;
++  }
++  .marquee-track {
++    width: max-content;
++    animation: marquee 36s linear infinite;
++  }
++  .marquee-track:hover {
++    animation-play-state: paused;
++  }
++}
++
++@keyframes marquee {
++  from {
++    transform: translateX(0);
++  }
++  to {
++    transform: translateX(-50%);
++  }
++}
++
++@media (prefers-reduced-motion: reduce) {
++  html {
++    scroll-behavior: auto;
++  }
++  .marquee-track {
++    animation: none;
++  }
++  *,
++  *::before,
++  *::after {
++    animation-duration: 0.01ms !important;
++    transition-duration: 0.01ms !important;
++  }
++}
++
++@media print {
++  body {
++    background: #fff !important;
++  }
++  * {
++    color: #111 !important;
++    background: transparent !important;
++    box-shadow: none !important;
++    text-shadow: none !important;
++    border-color: #ddd !important;
++  }
++  nav,
++  footer,
++  .no-print,
++  .noise,
++  .grid-bg {
++    display: none !important;
++  }
++  main {
++    padding-top: 0 !important;
++  }
++}
+diff --git a/pages/_app.js b/pages/_app.js
+index a5ef552..a5ef552 100644
+--- a/pages/_app.js
++++ b/pages/_app.js
+@@ -1,13 +1,36 @@
+-import Navbar from '../components/Navbar';
++import { useRouter } from 'next/router';
++import { NextIntlClientProvider } from 'next-intl';
++import { Space_Grotesk, Inter, JetBrains_Mono } from 'next/font/google';
++import Layout from '../components/layout/Layout';
++import de from '../messages/de.json';
++import en from '../messages/en.json';
+ import '../styles/globals.css';
+ 
++const display = Space_Grotesk({ subsets: ['latin'], variable: '--font-display', display: 'swap' });
++const body = Inter({ subsets: ['latin'], variable: '--font-body', display: 'swap' });
++const mono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' });
++
++const messages = { de, en };
++
+ function MyApp({ Component, pageProps }) {
++  const router = useRouter();
++  const locale = router.locale || 'de';
++
+   return (
+-    <>
+-      <Navbar />
+-      <Component {...pageProps} />
+-    </>
++    <div className={`${display.variable} ${body.variable} ${mono.variable} font-sans`}>
++      <NextIntlClientProvider
++        locale={locale}
++        messages={messages[locale]}
++        timeZone="Europe/Berlin"
++      >
++        <Layout>
++          <Component {...pageProps} />
++        </Layout>
++      </NextIntlClientProvider>
++    </div>
+   );
+ }
+ 
+ export default MyApp;
+diff --git a/pages/_document.js b/pages/_document.js
+index 52762f5..52762f5 100644
+--- a/pages/_document.js
++++ b/pages/_document.js
+@@ -1,48 +1,46 @@
+-import { Html, Head, Main, NextScript } from 'next/document'
+-
+-export default function Document() {
+-  return (
+-    <Html>
+-      <Head>
+-        <link rel="icon" href="/favicon.ico" />
+-        <link rel="shortcut icon" href="/favicon.ico" />
+-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
+-        {/* PWA / install metadata */}
+-        <link rel="manifest" href="/manifest.webmanifest" />
+-        <meta name="theme-color" content="#5651e5" />
+-        <meta name="application-name" content="Amin" />
+-        <meta name="description" content="Portfolio of Mohamad Amin Mansori, a front-end web developer specializing in responsive, exceptional digital experiences." />
+-        {/* iOS standalone web app */}
+-        <meta name="apple-mobile-web-app-capable" content="yes" />
+-        <meta name="mobile-web-app-capable" content="yes" />
+-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+-        <meta name="apple-mobile-web-app-title" content="Amin" />
+-        <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"></link>
+-      </Head>
+-      <body>
+-        <Main />
+-        <NextScript />
+-        {/* Register the service worker as early as possible (before React
+-            hydrates) so PWA auditors like Lighthouse/PWABuilder detect it
+-            within their short check window. Rendered as an external file so
+-            it runs synchronously after the page HTML loads. */}
+-        <script
+-          dangerouslySetInnerHTML={{
+-            __html:
+-              "if('serviceWorker' in navigator){" +
+-              "window.addEventListener('load',function(){" +
+-              "navigator.serviceWorker.register('/sw.js').catch(function(e){" +
+-              "console.warn('SW registration failed:',e)" +
+-              "})" +
+-              "})" +
+-              "}",
+-          }}
+-        />
+-      </body>
+-    </Html>
+-  )
+-}
++import Document, { Html, Head, Main, NextScript } from 'next/document';
++
++export default class MyDocument extends Document {
++  render() {
++    const locale = this.props.locale || 'de';
++    return (
++      <Html lang={locale}>
++        <Head>
++          <link rel="icon" href="/favicon.ico" />
++          <link rel="shortcut icon" href="/favicon.ico" />
++          <link rel="apple-touch-icon" href="/icons/apple-touch-icon-180.png" />
++          <link rel="manifest" href="/manifest.webmanifest" />
++          <meta name="theme-color" content="#060609" />
++          <meta name="application-name" content="Amin Mansori" />
++          <meta
++            name="description"
++            content="Portfolio von Mohamad Amin Mansori – Frontend-Entwickler für React, Next.js, TypeScript und Three.js. Verfügbar für Positionen in Deutschland."
++          />
++          <meta name="apple-mobile-web-app-capable" content="yes" />
++          <meta name="mobile-web-app-capable" content="yes" />
++          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
++          <meta name="apple-mobile-web-app-title" content="Amin" />
++        </Head>
++        <body>
++          <Main />
++          <NextScript />
++          {/* Register the service worker early so PWA auditors detect it. */}
++          <script
++            dangerouslySetInnerHTML={{
++              __html:
++                "if('serviceWorker' in navigator){" +
++                "window.addEventListener('load',function(){" +
++                "navigator.serviceWorker.register('/sw.js').catch(function(e){" +
++                "console.warn('SW registration failed:',e)" +
++                "})" +
++                "})" +
++                "}",
++            }}
++          />
++        </body>
++      </Html>
++    );
++  }
++}
+diff --git a/pages/index.js b/pages/index.js
+index 6e7ecee..6e7ecee 100644
+--- a/pages/index.js
++++ b/pages/index.js
+@@ -1,31 +1,44 @@
+-import Head from "next/head";
+-import About from "../components/About";
+-import Contact from "../components/Contact";
+-import Main from "../components/Main";
+-import Projects from "../components/Projects";
+-import Skills from "../components/Skills";
+-import Resumee from "../components/Resumee";
++import Head from 'next/head';
++import { useTranslations } from 'next-intl';
++import Seo from '../components/Seo';
++import Hero from '../components/sections/Hero';
++import Marquee from '../components/sections/Marquee';
++import About from '../components/sections/About';
++import Skills from '../components/sections/Skills';
++import Experience from '../components/sections/Experience';
++import Projects from '../components/sections/Projects';
++import Contact from '../components/sections/Contact';
++import { SITE } from '../lib/site';
+ 
+ export default function Home() {
++  const t = useTranslations('Meta');
++  const person = {
++    '@context': 'https://schema.org',
++    '@type': 'Person',
++    name: SITE.name,
++    url: SITE.url,
++    jobTitle: 'Frontend Developer',
++    email: `mailto:${SITE.email}`,
++    sameAs: [SITE.github, SITE.linkedin],
++    knowsAbout: ['React', 'Next.js', 'TypeScript', 'Three.js', 'Tailwind CSS'],
++    description: t('description'),
++  };
++
+   return (
+-    <div>
++    <>
++      <Seo />
+       <Head>
+-        <title>Amin | Front-End Developer</title>
+-        <meta
+-          name="description"
+-          content="I’m a front-end web developer specializing in building (and occasionally designing) exceptional digital experiences."
++        <script
++          type="application/ld+json"
++          dangerouslySetInnerHTML={{ __html: JSON.stringify(person) }}
+         />
+-        <link rel="icon" href="/favicon.ico" />
+-        <link rel="shortcut icon" href="/favicon.ico" />
+-        <link rel="apple-touch-icon" href="/favicon.ico" />
+       </Head>
+-      <Main />
+-      <Projects />
++      <Hero />
++      <Marquee />
+       <About />
+-      <Resumee />
+       <Skills />
++      <Experience />
++      <Projects />
+       <Contact />
+-    </div>
++    </>
+   );
+ }
+diff --git a/public/sw.js b/public/sw.js
+index 794c256..794c256 100644
+--- a/public/sw.js
++++ b/public/sw.js
+@@ -12,7 +12,7 @@
+  * Bump CACHE_VERSION whenever you ship a breaking SW change; the activate
+  * step will delete old caches.
+  */
+-const CACHE_VERSION = 'v1';
++const CACHE_VERSION = 'v2';
+ const STATIC_CACHE = `amin-static-${CACHE_VERSION}`;
+ const PAGE_CACHE = `amin-pages-${CACHE_VERSION}`;
+ 
+diff --git a/public/manifest.webmanifest b/public/manifest.webmanifest
+index ac0030e..ac0030e 100644
+--- a/public/manifest.webmanifest
++++ b/public/manifest.webmanifest
+@@ -1,60 +1,60 @@
+ {
+-  "name": "Amin Mansori — Front-End Developer",
++  "name": "Mohamad Amin Mansori — Frontend-Entwickler",
+   "short_name": "Amin",
+-  "description": "Portfolio of Mohamad Amin Mansori, a front-end web developer specializing in responsive, exceptional digital experiences.",
++  "description": "Portfolio von Mohamad Amin Mansori – Frontend-Entwickler für React, Next.js, TypeScript und Three.js.",
+   "start_url": "/",
+   "scope": "/",
+   "id": "/",
+   "display": "standalone",
+   "orientation": "portrait-primary",
+-  "background_color": "#ecf0f3",
+-  "theme_color": "#5651e5",
+-  "lang": "en",
++  "background_color": "#060609",
++  "theme_color": "#060609",
++  "lang": "de",
+   "dir": "ltr",
+   "categories": ["portfolio", "developer", "personal"],
+   "icons": [
+     {
+       "src": "/icons/icon-192.png",
+       "sizes": "192x192",
+       "type": "image/png",
+       "purpose": "any"
+     },
+     {
+       "src": "/icons/icon-512.png",
+       "sizes": "512x512",
+       "type": "image/png",
+       "purpose": "any"
+     },
+     {
+       "src": "/icons/icon-512-maskable.png",
+       "sizes": "512x512",
+       "type": "image/png",
+       "purpose": "maskable"
+     }
+   ],
+   "shortcuts": [
+     {
+-      "name": "Resume",
+-      "short_name": "Resume",
+-      "description": "View Amin's resume",
+-      "url": "/resume"
++      "name": "Lebenslauf",
++      "short_name": "CV",
++      "description": "Lebenslauf ansehen",
++      "url": "/cv"
+     },
+     {
+-      "name": "Projects",
+-      "short_name": "Projects",
+-      "description": "View featured projects",
++      "name": "Projekte",
++      "short_name": "Projekte",
++      "description": "Ausgewählte Projekte ansehen",
+       "url": "/#projects"
+     },
+     {
+-      "name": "Contact",
+-      "short_name": "Contact",
+-      "description": "Get in touch",
++      "name": "Kontakt",
++      "short_name": "Kontakt",
++      "description": "Kontakt aufnehmen",
+       "url": "/#contact"
+     }
+   ]
+ }
+diff --git a/README.md b/README.md
+index b12f3e3..b12f3e3 100644
+--- a/README.md
++++ b/README.md
+@@ -1,37 +1,44 @@
+-This is a Next.js project bootstrapped with `create-next-app`.
+-
+-## Getting Started
+-
+-First, run the development server:
+-
+-```bash
+-npm run dev
+-# or
+-yarn dev
+-```
+-
+-Open http://localhost:3000 with your browser to see the result.
+-
+-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+-
+-API routes can be accessed on http://localhost:3000/api/hello. This endpoint can be edited in `pages/api/hello.js`.
+-
+-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as API routes instead of React pages.
+-
+-## Learn More
+-
+-To learn more about Next.js, take a look at the following resources:
+-
+-- Next.js Documentation - learn about Next.js features and API.
+-- Learn Next.js - an interactive Next.js tutorial.
+-
+-You can check out the Next.js GitHub repository - your feedback and contributions are welcome!
+-
+-## Deploy on Vercel
+-
+-The easiest way to deploy your Next.js app is to use the Vercel Platform from the creators of Next.js.
+-
+-Check out our Next.js deployment documentation for more details.
++# Portfolio — Mohamad Amin Mansori
++
++Personal portfolio website, built for the German job market. Bilingual
++(German / English), dark editorial design, interactive 3D hero and
++scroll-driven motion. Installable as a PWA.
++
++## Tech stack
++
++- **Next.js 14** (Pages Router) + **React 18**
++- **next-intl** — i18n with `de` (default) and `en` locales
++- **Tailwind CSS 3** — design system (ink / lime / violet)
++- **Three.js** via `@react-three/fiber` + `@react-three/drei` — hero scene
++- **Framer Motion** — reveal, parallax and micro-interactions
++- **Lenis** — smooth scrolling
++- `next/font` — self-hosted Google fonts (DSGVO-friendly, no external requests)
++
++## Development
++
++```bash
++npm install
++npm run dev
++```
++
++Open http://localhost:3000 (German) or http://localhost:3000/en (English).
++
++> The first build downloads fonts via `next/font`, so it needs internet access.
++
++## Structure
++
++- `messages/de.json`, `messages/en.json` — all copy in both languages
++- `lib/projects.js` — project data (add new projects here)
++- `lib/skills.js` — skill groups and icons
++- `components/sections/*` — homepage sections
++- `components/three/HeroScene.jsx` — the 3D hero (lazy-loaded, reduced-motion aware)
++- `pages/projects/[slug].jsx` — case-study pages
++- `pages/cv.jsx` — printable CV (Lebenslauf)
++
++## Adding a new project
++
++1. Add an entry to `lib/projects.js` (images go to `public/assets/projects/`).
++2. Add the copy under `Projects.cases.<slug>` in **both** message files.
++3. The card, case-study page and routing are generated automatically.
++
++## Legal
++
++`pages/impressum.jsx` and `pages/datenschutz.jsx` contain placeholders that
++must be replaced with real contact details before going live.
+diff --git a/messages/de.json b/messages/de.json
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/messages/de.json
+@@ -0,0 +1,132 @@
++{
++  "Meta": {
++    "title": "Mohamad Amin Mansori — Frontend-Entwickler · React & Next.js",
++    "description": "Portfolio von Mohamad Amin Mansori: Frontend-Entwickler mit über fünf Jahren Erfahrung in React, Next.js, TypeScript und Three.js. Verfügbar für Positionen in Deutschland – remote oder vor Ort."
++  },
++  "Nav": {
++    "about": "Über mich",
++    "skills": "Skills",
++    "experience": "Erfahrung",
++    "projects": "Projekte",
++    "contact": "Kontakt",
++    "cv": "Lebenslauf",
++    "language": "Sprache wechseln",
++    "menu": "Menü öffnen",
++    "close": "Menü schließen"
++  },
++  "Hero": {
++    "badge": "Offen für neue Positionen in Deutschland",
++    "greeting": "Hallo, ich bin",
++    "name": "Mohamad Amin Mansori",
++    "titleA": "Ich baue Interfaces,",
++    "titleB": "die im Kopf bleiben.",
++    "roles": ["Frontend-Entwickler", "React- & Next.js-Spezialist", "Creative Developer", "TypeScript-Enthusiast"],
++    "subtitle": "Frontend-Entwickler mit über fünf Jahren Erfahrung: Ich verbinde präzisen, wartbaren Code mit durchdachtem Design – von E-Commerce-Plattformen über Dashboards bis zu interaktiven 3D-Erlebnissen im Browser.",
++    "ctaProjects": "Projekte entdecken",
++    "ctaContact": "Kontakt aufnehmen",
++    "stats": [
++      { "value": "5+", "label": "Jahre Erfahrung" },
++      { "value": "6", "label": "ausgewählte Projekte" },
++      { "value": "20+", "label": "Technologien im Einsatz" }
++    ],
++    "scroll": "Scrollen",
++    "scene": "Interaktives 3D-Objekt – reagiert auf Maus und Scroll"
++  },
++  "Marquee": {
++    "items": ["React", "Next.js", "TypeScript", "Three.js", "Tailwind CSS", "Angular", "GSAP", "Framer Motion", "Prisma", "tRPC", "Recoil", "Material UI", "GitLab CI", "Vercel"]
++  },
++  "About": {
++    "kicker": "01 — Über mich",
++    "title": "Entwickler aus Überzeugung. Ingenieur im Denken.",
++    "p1": "Ich bin Mohamad Amin Mansori, Frontend-Entwickler mit Schwerpunkt auf React, Next.js und TypeScript. Seit 2020 entwickle ich Webanwendungen – vom ersten Praktikum über zwei Jahre Produktentwicklung bei Batriders bis zur eigenverantwortlichen Umsetzung kompletter Full-Stack-Projekte.",
++    "p2": "Mein Studium des Industrial Engineering prägt meine Arbeitsweise: Ich denke in Prozessen, messe Ergebnisse und löse Probleme strukturiert. In der Zusammenarbeit mit Backend-Teams, Designern und Kunden fühle ich mich zu Hause – klare Kommunikation, saubere Schnittstellen und verlässliche Übergaben.",
++    "p3": "Aktuell suche ich eine neue Herausforderung in Deutschland, remote oder vor Ort. Ich möchte mein Know-how in ein starkes Team einbringen und gemeinsam Produkte bauen, die Nutzer wirklich gern benutzen.",
++    "photoAlt": "Porträt von Mohamad Amin Mansori",
++    "badge": "5+ Jahre Erfahrung",
++    "facts": ["React · Next.js · TypeScript", "B.Sc. Industrial Engineering", "Iran · offen für Deutschland & Remote"],
++    "highlights": [
++      { "title": "Performance & Qualität", "text": "Saubere Komponenten-Architektur, TypeScript, Testing und optimierte Ladezeiten – messbar an den Core Web Vitals." },
++      { "title": "Design & Motion", "text": "Von der Wireframe-Idee bis zum polierten UI: Tailwind CSS, Material UI, GSAP, Framer Motion und Three.js." },
++      { "title": "Zusammenarbeit", "text": "Erfahrung mit Git, GitLab, CI/CD, Code-Reviews und direkter Kundenkommunikation – auf Englisch und Persisch." }
++    ]
++  },
++  "Skills": {
++    "kicker": "02 — Skills",
++    "title": "Werkzeuge, die ich beherrsche.",
++    "subtitle": "Ein Stack für moderne Webprodukte – von der ersten Komponente bis zum Deployment.",
++    "categories": {
++      "core": "Sprachen & Grundlagen",
++      "frameworks": "Frameworks & State",
++      "ui": "UI, Motion & 3D",
++      "tools": "Workflow & Design"
++    }
++  },
++  "Experience": {
++    "kicker": "03 — Erfahrung",
++    "title": "Stationen & Meilensteine.",
++    "items": [
++      {
++        "period": "2023 – heute",
++        "role": "Full-Stack-Entwickler",
++        "company": "Freelance & eigene Projekte",
++        "bullets": [
++          "Entwicklung vollständiger Produkte mit Next.js, Prisma, tRPC und Supabase – inklusive 3D-Features mit Three.js.",
++          "Konzeption und Umsetzung von Dashboards, Authentifizierung mit next-auth und Mehrsprachigkeit.",
++          "Testing, Debugging und Deployment auf eigenen Domains mit Vercel und CI/CD."
++        ]
++      },
++      {
++        "period": "2021 – 2023",
++        "role": "Frontend-Entwickler",
++        "company": "Batriders",
++        "bullets": [
++          "Entwicklung responsiver Web-Apps mit React, Next.js und TypeScript.",
++          "UI-Umsetzung mit Material UI und Tailwind CSS.",
++          "Debugging, Testing und Deployment des Frontend-Codes."
++        ]
++      },
++      {
++        "period": "2020 · 9 Monate",
++        "role": "Junior Frontend-Entwickler (Praktikum)",
++        "company": "Novin Rayan Gostar Alborz",
++        "bullets": [
++          "Einstieg in die professionelle Webentwicklung mit HTML, CSS und JavaScript.",
++          "Mitarbeit an echten Kundenprojekten unter Anleitung erfahrener Entwickler."
++        ]
++      }
++    ],
++    "eduTitle": "Ausbildung",
++    "degree": "B.Sc. Industrial Engineering",
++    "school": "Azad-Universität Karaj, Iran",
++    "eduNote": "Analytisches Denken, Prozessoptimierung und strukturierte Problemlösung – das Fundament meiner Arbeit als Entwickler."
++  },
++  "Projects": {
++    "kicker": "04 — Projekte",
++    "title": "Ausgewählte Arbeiten.",
++    "subtitle": "Sechs Projekte, die zeigen, wie ich denke und baue. Dieser Bereich wächst kontinuierlich – neue Projekte folgen.",
++    "viewCase": "Case Study ansehen",
++    "github": "Weitere Projekte auf GitHub",
++    "types": { "client": "Auftragsprojekt", "own": "Eigenprojekt", "study": "UI-Studie" },
++    "cases": {
++      "shoplon": {
++        "title": "Shoplon",
++        "tagline": "Social-Commerce-Plattform, die Instagram-Shops in vollwertige Verkaufsplattformen verwandelt.",
++        "role": "Frontend-Entwickler",
++        "overview": "Shoplon verbindet Instagram-Seiten mit einem modernen Online-Shop: Nutzer entdecken Produkte, folgen Shops, chatten, kommentieren und kaufen – alles in einer schnellen, mobilen Oberfläche.",
++        "challenge": "Eine Oberfläche, die sich wie ein soziales Netzwerk anfühlt, aber die Zuverlässigkeit eines Shops bietet: Infinite Scroll, Echtzeit-Chat, Profile, Suche und Kommentare – ohne Performance-Einbußen.",
++        "solution": "Umsetzung mit Next.js und TypeScript, Tailwind CSS für ein konsistentes UI und Recoil für feingranulares State-Management. REST-APIs werden über Axios angebunden; Infinite Scroll und Code-Splitting halten die App schnell.",
++        "outcome": "Eine produktive Plattform, die Händlern einen deutlich einfacheren Verkauf über Social Media ermöglicht – mit einer Buyer-Experience, die sich nativ anfühlt.",
++        "features": ["Instagram-Anbindung für Shops", "Infinite Scroll & Produktsuche", "Profile, Follow & Kommentare", "Chat zwischen Käufern und Verkäufern", "Login & Nutzerverwaltung"]
++      },
++      "magreach": {
++        "title": "MagReach Dashboard",
++        "tagline": "Admin- und Advertiser-Dashboard für eine Finanzdienstleistungs-App.",
++        "role": "Frontend-Entwickler",
++        "overview": "MagReach bündelt die Verwaltung einer Finanz-App in einem Dashboard: Wallet-Management, Nutzer- und Werbetreibenden-Verwaltung inklusive deren Social-Kanälen sowie Auswertungen für datenbasierte Entscheidungen.",
++        "challenge": "Komplexe Geschäftslogik – Wallets, Rollen, Werbetreibende und deren Social-Accounts – in einer Oberfläche, die für das Team schnell und fehlerfrei bedienbar bleibt.",
++        "solution": "Next.js mit Material UI und Tailwind CSS, Recoil für den App-State und React Hook Form für robuste, validierte Formulare. next-auth sichert den Zugriff ab.",
++        "outcome": "Das Team verwaltet Kampagnen, Nutzer und Auswertungen an einem Ort – mit deutlich weniger manuellem Aufwand und klareren Entscheidungsgrundlagen.",
++        "features": ["Wallet- & Transaktionsübersicht", "Nutzer- und Rollenverwaltung", "Werbetreibende inkl. Social-Accounts", "Validierte Formulare mit React Hook Form", "Gesicherter Login mit next-auth"]
++      },
++      "gameplanet": {
++        "title": "GamePlanet",
++        "tagline": "Full-Stack-Mietshop für Spielekonsolen – mit 3D-Produktansicht im Browser.",
++        "role": "Full-Stack-Entwickler",
++        "overview": "GamePlanet vermietet Spielekonsolen: Nutzer stöbern im Katalog, betrachten Produkte in 3D und bestellen. Ein vollständiges Dashboard verwaltet Produkte, Bestellungen und Nutzer; die Oberfläche ist mehrsprachig.",
++        "challenge": "Ein Miet-Shop, der mehr kann als Standard: 3D-Produktansichten, durchgängige Typsicherheit von der Datenbank bis zur UI und ein Dashboard für den gesamten Bestellprozess.",
++        "solution": "Next.js und TypeScript als Fundament, Prisma + tRPC für typsichere APIs, Supabase als Datenbank, next-auth für Login und Three.js für die interaktive Produktansicht. i18next macht die App international.",
++        "outcome": "Ein komplettes Full-Stack-Produkt, das Design, 3D und saubere Architektur verbindet – deployt auf Vercel und bereit für echte Nutzer.",
++        "features": ["3D-Produktansicht mit Three.js", "Typsichere API mit Prisma & tRPC", "Dashboard für Produkte, Bestellungen & Nutzer", "Authentifizierung mit next-auth", "Mehrsprachig mit i18next"]
++      },
++      "zinamatv": {
++        "title": "ZinemaTV",
++        "tagline": "VOD-Plattform mit Custom-Video-Player und Rollen-Dashboard für drei Nutzertypen.",
++        "role": "Frontend-Entwickler",
++        "overview": "ZinemaTV ist eine Video-on-Demand-Plattform mit eigens entwickeltem Player. Das von mir gebaute Dashboard bedient drei Rollen – Management, Mitarbeiter und Publisher – und steuert alle Inhalte der Hauptwebsite.",
++        "challenge": "Ein Redaktionssystem, das drei sehr unterschiedliche Nutzergruppen abbildet und trotzdem intuitiv bleibt: Filme, Nutzer und Website-Sektionen zentral verwalten.",
++        "solution": "React und Material UI für das Dashboard, Next.js und Tailwind für die Plattform, Recoil für den State und next-auth für die Rollen. Der Custom-Player ist auf die Anforderungen der Plattform zugeschnitten.",
++        "outcome": "Das Team pflegt Katalog, Nutzer und Website-Inhalte vollständig selbst – ohne Entwickler-Engagement im Tagesgeschäft.",
++        "features": ["Custom-Video-Player", "Dashboard für 3 Rollen", "Verwaltung von Filmen & Nutzern", "Steuerung aller Website-Sektionen", "Rollenbasierter Zugriff mit next-auth"]
++      },
++      "rentta": {
++        "title": "Rentta",
++        "tagline": "Miet-Marktplatz, der Vermieter und Mieter zusammenbringt – mit Karte und Dashboard.",
++        "role": "Full-Stack-Entwickler",
++        "overview": "Rentta verbindet Menschen, die Dinge vermieten, mit denen, die sie brauchen: Angebote auf der Karte entdecken, anfragen, verwalten. Ein Dashboard steuert Angebote, Bestellungen und Nutzer.",
++        "challenge": "Ein zweiseitiger Marktplatz mit Geo-Bezug: Angebote müssen auffindbar, Anfragen nachvollziehbar und Verwaltungsprozesse für beide Seiten einfach sein.",
++        "solution": "Next.js + Prisma + tRPC als typsicherer Full-Stack-Unterbau, Supabase für Daten, Leaflet für die Kartenansicht, next-auth für Login und i18next für Mehrsprachigkeit.",
++        "outcome": "Eine vollständige Plattform von der Idee bis zum Deployment – mit Karten-Suche, Dashboard und sauberer API-Architektur.",
++        "features": ["Kartenansicht mit Leaflet", "Angebote erstellen & verwalten", "Anfragen & Bestellungen", "Typsichere API mit tRPC", "Mehrsprachige Oberfläche"]
++      },
++      "twitch": {
++        "title": "Twitch UI",
++        "tagline": "UI-Studie: responsiver Nachbau des Twitch-Interfaces mit OAuth-Login.",
++        "role": "Frontend-Entwickler",
++        "overview": "Eine Lern- und Designstudie: Das Interface von Twitch.tv wird responsiv nachgebaut – inklusive Login über GitHub und Google. Der Fokus liegt auf Layout, Wiederverwendbarkeit und Authentifizierungs-Flows.",
++        "challenge": "Ein komplexes, dichtes UI wie Twitch sauber in Komponenten zerlegen und dabei Responsiveness und Performance erhalten.",
++        "solution": "Next.js mit Tailwind CSS für das Layout, next-auth für OAuth (GitHub & Google) und die Next.js Image-Komponente für optimiertes Lazy Loading.",
++        "outcome": "Eine Studie, die zeigt, wie ich komplexe Interfaces analysiere, in Komponenten überführe und Auth-Flows korrekt umsetze.",
++        "features": ["Responsiver Twitch-Nachbau", "OAuth mit GitHub & Google", "Optimiertes Image-Lazy-Loading", "Wiederverwendbare Komponenten"]
++      }
++    }
++  },
++  "Case": {
++    "back": "Zurück zu den Projekten",
++    "overview": "Überblick",
++    "challenge": "Herausforderung",
++    "solution": "Lösung",
++    "outcome": "Ergebnis",
++    "features": "Funktionen",
++    "stack": "Tech-Stack",
++    "role": "Rolle",
++    "type": "Typ",
++    "live": "Live-Demo öffnen",
++    "noLive": "Für dieses Projekt ist keine öffentliche Demo verfügbar.",
++    "gallery": "Einblicke",
++    "prev": "Vorheriges Projekt",
++    "next": "Nächstes Projekt"
++  },
++  "Contact": {
++    "kicker": "05 — Kontakt",
++    "title": "Lassen Sie uns etwas Großartiges bauen.",
++    "text": "Ich suche eine Frontend-Position in Deutschland – remote oder vor Ort – und bin auch für spannende Freelance-Projekte offen. Schreiben Sie mir: Ich antworte in der Regel innerhalb von 48 Stunden.",
++    "availability": "Ab sofort verfügbar",
++    "cta": "E-Mail schreiben",
++    "email": "E-Mail",
++    "phone": "Telefon / WhatsApp",
++    "github": "GitHub",
++    "linkedin": "LinkedIn",
++    "location": "Standort",
++    "locationValue": "Iran · verfügbar für Deutschland & Remote",
++    "copy": "Kopieren",
++    "copied": "Kopiert!"
++  },
++  "Footer": {
++    "tagline": "Frontend-Entwickler für durchdachte, lebendige Webprodukte.",
++    "navigation": "Navigation",
++    "rights": "Alle Rechte vorbehalten.",
++    "builtWith": "Entwickelt mit Next.js, Three.js, Tailwind CSS & next-intl.",
++    "impressum": "Impressum",
++    "privacy": "Datenschutz",
++    "top": "Nach oben"
++  },
++  "CV": {
++    "title": "Lebenslauf",
++    "print": "Als PDF drucken",
++    "request": "PDF per E-Mail anfordern",
++    "profile": "Profil",
++    "profileText": "Frontend-Entwickler mit über fünf Jahren Erfahrung in React, Next.js und TypeScript. Ich verbinde ingenieurhaftes, strukturiertes Denken mit einem Auge für Design und Motion – und suche ein Team in Deutschland, in dem ich diese Stärke einbringen kann.",
++    "skills": "Skills",
++    "languages": "Sprachen",
++    "langItems": [
++      { "name": "Persisch", "level": "Muttersprache" },
++      { "name": "Englisch", "level": "Fließend in Wort und Schrift" }
++    ]
++  },
++  "Impressum": {
++    "title": "Impressum",
++    "notice": "Hinweis: Die folgenden Angaben sind Platzhalter und müssen vor der Veröffentlichung durch echte Kontaktdaten ersetzt werden.",
++    "contactH": "Kontakt",
++    "blocks": [
++      { "h": "Angaben gemäß § 5 DDG", "p": "Mohamad Amin Mansori\n[Straße und Hausnummer]\n[PLZ und Ort]\n[Land]" },
++      { "h": "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV", "p": "Mohamad Amin Mansori\n[Anschrift wie oben]" },
++      { "h": "Haftung für Inhalte", "p": "Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden." },
++      { "h": "Haftung für Links", "p": "Diese Website enthält Links zu externen Websites Dritter, auf deren Inhalte kein Einfluss besteht. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter verantwortlich." }
++    ]
++  },
++  "Privacy": {
++    "title": "Datenschutzerklärung",
++    "updated": "Stand: November 2026",
++    "blocks": [
++      { "h": "1. Verantwortlicher", "p": "Verantwortlich für die Datenverarbeitung auf dieser Website ist Mohamad Amin Mansori. Die Kontaktdaten finden Sie im Impressum." },
++      { "h": "2. Hosting", "p": "Diese Website wird bei Vercel Inc. gehostet. Beim Aufruf der Seiten werden durch den Hoster technisch notwendige Server-Logdaten (z. B. IP-Adresse, Zeitpunkt, angeforderte Datei) verarbeitet, um den Betrieb und die Sicherheit zu gewährleisten. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO." },
++      { "h": "3. Keine Cookies, kein Tracking", "p": "Diese Website setzt keine Analyse- oder Marketing-Cookies ein und verwendet keine Tracking-Dienste. Es werden keine Nutzungsprofile erstellt." },
++      { "h": "4. Schriftarten", "p": "Verwendete Schriftarten werden lokal über den Next.js-Font-Mechanismus ausgeliefert. Es besteht keine Verbindung zu Google-Font-Servern." },
++      { "h": "5. Kontaktaufnahme", "p": "Wenn Sie per E-Mail Kontakt aufnehmen, werden Ihre Angaben zur Bearbeitung der Anfrage verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b bzw. f DSGVO. Die Daten werden gelöscht, sobald sie nicht mehr erforderlich sind." },
++      { "h": "6. Ihre Rechte", "p": "Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Zudem steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu." }
++    ]
++  },
++  "NotFound": {
++    "title": "Seite nicht gefunden",
++    "text": "Diese Seite existiert nicht oder wurde verschoben. Vielleicht finden Sie über die Startseite, was Sie suchen.",
++    "home": "Zur Startseite"
++  }
++}
+diff --git a/messages/en.json b/messages/en.json
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/messages/en.json
+@@ -0,0 +1,132 @@
++{
++  "Meta": {
++    "title": "Mohamad Amin Mansori — Frontend Developer · React & Next.js",
++    "description": "Portfolio of Mohamad Amin Mansori: frontend developer with 5+ years of experience in React, Next.js, TypeScript and Three.js. Available for roles in Germany – remote or on-site."
++  },
++  "Nav": {
++    "about": "About",
++    "skills": "Skills",
++    "experience": "Experience",
++    "projects": "Projects",
++    "contact": "Contact",
++    "cv": "CV",
++    "language": "Switch language",
++    "menu": "Open menu",
++    "close": "Close menu"
++  },
++  "Hero": {
++    "badge": "Open to new roles in Germany",
++    "greeting": "Hi, I am",
++    "name": "Mohamad Amin Mansori",
++    "titleA": "I build interfaces",
++    "titleB": "people remember.",
++    "roles": ["Frontend Developer", "React & Next.js Specialist", "Creative Developer", "TypeScript Enthusiast"],
++    "subtitle": "Frontend developer with 5+ years of experience: I combine precise, maintainable code with thoughtful design – from e-commerce platforms and dashboards to interactive 3D experiences in the browser.",
++    "ctaProjects": "Explore projects",
++    "ctaContact": "Get in touch",
++    "stats": [
++      { "value": "5+", "label": "years of experience" },
++      { "value": "6", "label": "selected projects" },
++      { "value": "20+", "label": "technologies in use" }
++    ],
++    "scroll": "Scroll",
++    "scene": "Interactive 3D object – reacts to your mouse and scroll"
++  },
++  "Marquee": {
++    "items": ["React", "Next.js", "TypeScript", "Three.js", "Tailwind CSS", "Angular", "GSAP", "Framer Motion", "Prisma", "tRPC", "Recoil", "Material UI", "GitLab CI", "Vercel"]
++  },
++  "About": {
++    "kicker": "01 — About",
++    "title": "A developer by passion. An engineer by mindset.",
++    "p1": "I am Mohamad Amin Mansori, a frontend developer focused on React, Next.js and TypeScript. I have been building web applications since 2020 – from my first internship through two years of product development at Batriders to independently delivering complete full-stack projects.",
++    "p2": "My background in Industrial Engineering shapes how I work: I think in processes, measure results and solve problems systematically. I feel at home collaborating with backend teams, designers and clients – clear communication, clean interfaces and reliable handovers.",
++    "p3": "I am currently looking for a new challenge in Germany, remote or on-site. I want to bring my expertise into a strong team and build products people genuinely enjoy using.",
++    "photoAlt": "Portrait of Mohamad Amin Mansori",
++    "badge": "5+ years of experience",
++    "facts": ["React · Next.js · TypeScript", "B.Sc. Industrial Engineering", "Iran · open to Germany & remote"],
++    "highlights": [
++      { "title": "Performance & quality", "text": "Clean component architecture, TypeScript, testing and optimized load times – measurable in Core Web Vitals." },
++      { "title": "Design & motion", "text": "From wireframe idea to polished UI: Tailwind CSS, Material UI, GSAP, Framer Motion and Three.js." },
++      { "title": "Collaboration", "text": "Experience with Git, GitLab, CI/CD, code reviews and direct client communication – in English and Persian." }
++    ]
++  },
++  "Skills": {
++    "kicker": "02 — Skills",
++    "title": "Tools I am fluent in.",
++    "subtitle": "A stack for modern web products – from the first component to deployment.",
++    "categories": {
++      "core": "Languages & fundamentals",
++      "frameworks": "Frameworks & state",
++      "ui": "UI, motion & 3D",
++      "tools": "Workflow & design"
++    }
++  },
++  "Experience": {
++    "kicker": "03 — Experience",
++    "title": "Milestones & stations.",
++    "items": [
++      {
++        "period": "2023 – present",
++        "role": "Full-Stack Developer",
++        "company": "Freelance & own projects",
++        "bullets": [
++          "Building complete products with Next.js, Prisma, tRPC and Supabase – including 3D features with Three.js.",
++          "Designing and implementing dashboards, authentication with next-auth and multi-language support.",
++          "Testing, debugging and deploying to production domains with Vercel and CI/CD."
++        ]
++      },
++      {
++        "period": "2021 – 2023",
++        "role": "Frontend Developer",
++        "company": "Batriders",
++        "bullets": [
++          "Developed responsive web apps with React, Next.js and TypeScript.",
++          "Implemented UIs with Material UI and Tailwind CSS.",
++          "Debugging, testing and deploying frontend code."
++        ]
++      },
++      {
++        "period": "2020 · 9 months",
++        "role": "Junior Frontend Developer (Internship)",
++        "company": "Novin Rayan Gostar Alborz",
++        "bullets": [
++          "Entered professional web development with HTML, CSS and JavaScript.",
++          "Contributed to real client projects under the guidance of senior developers."
++        ]
++      }
++    ],
++    "eduTitle": "Education",
++    "degree": "B.Sc. Industrial Engineering",
++    "school": "Azad University of Karaj, Iran",
++    "eduNote": "Analytical thinking, process optimization and structured problem solving – the foundation of my work as a developer."
++  },
++  "Projects": {
++    "kicker": "04 — Projects",
++    "title": "Selected work.",
++    "subtitle": "Six projects that show how I think and build. This section keeps growing – new projects are on the way.",
++    "viewCase": "View case study",
++    "github": "More projects on GitHub",
++    "types": { "client": "Client project", "own": "Own project", "study": "UI study" },
++    "cases": {
++      "shoplon": {
++        "title": "Shoplon",
++        "tagline": "A social-commerce platform that turns Instagram shops into full-featured storefronts.",
++        "role": "Frontend Developer",
++        "overview": "Shoplon connects Instagram pages to a modern online shop: users discover products, follow shops, chat, comment and buy – all in a fast, mobile-first interface.",
++        "challenge": "An interface that feels like a social network but offers the reliability of a shop: infinite scroll, real-time chat, profiles, search and comments – without sacrificing performance.",
++        "solution": "Built with Next.js and TypeScript, Tailwind CSS for a consistent UI and Recoil for fine-grained state. REST APIs are consumed via Axios; infinite scroll and code splitting keep the app fast.",
++        "outcome": "A production platform that makes selling through social media significantly easier for merchants – with a buyer experience that feels native.",
++        "features": ["Instagram integration for shops", "Infinite scroll & product search", "Profiles, follow & comments", "Buyer–seller chat", "Login & user management"]
++      },
++      "magreach": {
++        "title": "MagReach Dashboard",
++        "tagline": "Admin and advertiser dashboard for a financial-services app.",
++        "role": "Frontend Developer",
++        "overview": "MagReach centralizes the management of a finance app in one dashboard: wallet management, user and advertiser administration including their social channels, and analytics for data-driven decisions.",
++        "challenge": "Complex business logic – wallets, roles, advertisers and their social accounts – in an interface the team can operate quickly and without errors.",
++        "solution": "Next.js with Material UI and Tailwind CSS, Recoil for app state and React Hook Form for robust, validated forms. next-auth secures access.",
++        "outcome": "The team manages campaigns, users and analytics in one place – with far less manual effort and clearer decision-making.",
++        "features": ["Wallet & transaction overview", "User & role management", "Advertisers incl. social accounts", "Validated forms with React Hook Form", "Secure login with next-auth"]
++      },
++      "gameplanet": {
++        "title": "GamePlanet",
++        "tagline": "A full-stack rental shop for game consoles – with 3D product views in the browser.",
++        "role": "Full-Stack Developer",
++        "overview": "GamePlanet rents out game consoles: users browse the catalog, inspect products in 3D and place orders. A complete dashboard manages products, orders and users; the interface is multi-language.",
++        "challenge": "A rental shop that goes beyond the standard: 3D product views, end-to-end type safety from database to UI, and a dashboard covering the entire order flow.",
++        "solution": "Next.js and TypeScript as the foundation, Prisma + tRPC for type-safe APIs, Supabase as the database, next-auth for login and Three.js for interactive product views. i18next makes the app international.",
++        "outcome": "A complete full-stack product combining design, 3D and clean architecture – deployed on Vercel and ready for real users.",
++        "features": ["3D product views with Three.js", "Type-safe API with Prisma & tRPC", "Dashboard for products, orders & users", "Authentication with next-auth", "Multi-language with i18next"]
++      },
++      "zinamatv": {
++        "title": "ZinemaTV",
++        "tagline": "A VOD platform with a custom video player and a role-based dashboard for three user types.",
++        "role": "Frontend Developer",
++        "overview": "ZinemaTV is a video-on-demand platform with a custom-built player. The dashboard I built serves three roles – management, employees and publishers – and controls all content on the main website.",
++        "challenge": "An editorial system that serves three very different user groups while staying intuitive: managing movies, users and website sections centrally.",
++        "solution": "React and Material UI for the dashboard, Next.js and Tailwind for the platform, Recoil for state and next-auth for roles. The custom player is tailored to the platform's needs.",
++        "outcome": "The team maintains the catalog, users and website content entirely on their own – no developer involvement in day-to-day operations.",
++        "features": ["Custom video player", "Dashboard for 3 roles", "Movie & user management", "Control of all website sections", "Role-based access with next-auth"]
++      },
++      "rentta": {
++        "title": "Rentta",
++        "tagline": "A rental marketplace connecting owners and renters – with maps and a dashboard.",
++        "role": "Full-Stack Developer",
++        "overview": "Rentta connects people who rent out things with those who need them: discover listings on a map, send requests, manage everything. A dashboard controls listings, orders and users.",
++        "challenge": "A two-sided marketplace with a geo dimension: listings must be discoverable, requests traceable, and management simple for both sides.",
++        "solution": "Next.js + Prisma + tRPC as a type-safe full-stack foundation, Supabase for data, Leaflet for the map view, next-auth for login and i18next for multi-language support.",
++        "outcome": "A complete platform from idea to deployment – with map search, a dashboard and a clean API architecture.",
++        "features": ["Map view with Leaflet", "Create & manage listings", "Requests & orders", "Type-safe API with tRPC", "Multi-language interface"]
++      },
++      "twitch": {
++        "title": "Twitch UI",
++        "tagline": "UI study: a responsive recreation of the Twitch interface with OAuth login.",
++        "role": "Frontend Developer",
++        "overview": "A learning and design study: the Twitch.tv interface rebuilt responsively – including login via GitHub and Google. The focus is on layout, reusability and authentication flows.",
++        "challenge": "Decomposing a complex, dense UI like Twitch into clean components while preserving responsiveness and performance.",
++        "solution": "Next.js with Tailwind CSS for the layout, next-auth for OAuth (GitHub & Google) and the Next.js Image component for optimized lazy loading.",
++        "outcome": "A study demonstrating how I analyze complex interfaces, turn them into components and implement auth flows correctly.",
++        "features": ["Responsive Twitch recreation", "OAuth with GitHub & Google", "Optimized image lazy loading", "Reusable components"]
++      }
++    }
++  },
++  "Case": {
++    "back": "Back to projects",
++    "overview": "Overview",
++    "challenge": "Challenge",
++    "solution": "Solution",
++    "outcome": "Outcome",
++    "features": "Features",
++    "stack": "Tech stack",
++    "role": "Role",
++    "type": "Type",
++    "live": "Open live demo",
++    "noLive": "No public demo is available for this project.",
++    "gallery": "Glimpses",
++    "prev": "Previous project",
++    "next": "Next project"
++  },
++  "Contact": {
++    "kicker": "05 — Contact",
++    "title": "Let us build something great.",
++    "text": "I am looking for a frontend role in Germany – remote or on-site – and I am also open to exciting freelance projects. Write to me: I usually reply within 48 hours.",
++    "availability": "Available immediately",
++    "cta": "Write an email",
++    "email": "Email",
++    "phone": "Phone / WhatsApp",
++    "github": "GitHub",
++    "linkedin": "LinkedIn",
++    "location": "Location",
++    "locationValue": "Iran · available for Germany & remote",
++    "copy": "Copy",
++    "copied": "Copied!"
++  },
++  "Footer": {
++    "tagline": "Frontend developer for thoughtful, lively web products.",
++    "navigation": "Navigation",
++    "rights": "All rights reserved.",
++    "builtWith": "Built with Next.js, Three.js, Tailwind CSS & next-intl.",
++    "impressum": "Legal notice",
++    "privacy": "Privacy",
++    "top": "Back to top"
++  },
++  "CV": {
++    "title": "Curriculum Vitae",
++    "print": "Print as PDF",
++    "request": "Request PDF by email",
++    "profile": "Profile",
++    "profileText": "Frontend developer with 5+ years of experience in React, Next.js and TypeScript. I combine an engineer's structured thinking with an eye for design and motion – and I am looking for a team in Germany where I can contribute this strength.",
++    "skills": "Skills",
++    "languages": "Languages",
++    "langItems": [
++      { "name": "Persian", "level": "Native" },
++      { "name": "English", "level": "Fluent, written and spoken" }
++    ]
++  },
++  "Impressum": {
++    "title": "Legal Notice",
++    "notice": "Note: the details below are placeholders and must be replaced with real contact information before going live.",
++    "contactH": "Contact",
++    "blocks": [
++      { "h": "Information according to § 5 DDG", "p": "Mohamad Amin Mansori\n[Street and number]\n[Postal code and city]\n[Country]" },
++      { "h": "Responsible for content according to § 18 (2) MStV", "p": "Mohamad Amin Mansori\n[Address as above]" },
++      { "h": "Liability for content", "p": "The contents of these pages were created with the utmost care. However, no guarantee can be given for the accuracy, completeness or timeliness of the content." },
++      { "h": "Liability for links", "p": "This website contains links to external third-party websites over whose content we have no influence. The respective provider is always responsible for the content of linked pages." }
++    ]
++  },
++  "Privacy": {
++    "title": "Privacy Policy",
++    "updated": "Last updated: November 2026",
++    "blocks": [
++      { "h": "1. Controller", "p": "Responsible for data processing on this website is Mohamad Amin Mansori. Contact details can be found in the legal notice (Impressum)." },
++      { "h": "2. Hosting", "p": "This website is hosted by Vercel Inc. When pages are accessed, the host processes technically necessary server log data (e.g. IP address, timestamp, requested file) to ensure operation and security. The legal basis is Art. 6(1)(f) GDPR." },
++      { "h": "3. No cookies, no tracking", "p": "This website does not use analytics or marketing cookies and does not use tracking services. No usage profiles are created." },
++      { "h": "4. Fonts", "p": "Fonts are served locally via the Next.js font mechanism. No connection to Google font servers is made." },
++      { "h": "5. Contact", "p": "If you contact us by email, your details are processed to handle the request. The legal basis is Art. 6(1)(b) or (f) GDPR. Data is deleted as soon as it is no longer required." },
++      { "h": "6. Your rights", "p": "You have the right to access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and objection (Art. 21). You also have the right to lodge a complaint with a data protection supervisory authority." }
++    ]
++  },
++  "NotFound": {
++    "title": "Page not found",
++    "text": "This page does not exist or has been moved. Maybe you will find what you are looking for on the homepage.",
++    "home": "Go to homepage"
++  }
++}
+diff --git a/lib/site.js b/lib/site.js
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/lib/site.js
+@@ -0,0 +1,13 @@
++export const SITE = {
++  name: 'Mohamad Amin Mansori',
++  shortName: 'Amin',
++  url: 'https://www.mohamadaminmansori.ir',
++  email: 'aminmansuri77z99@gmail.com',
++  phone: '+989109393315',
++  phoneDisplay: '+98 910 939 3315',
++  whatsapp: 'https://wa.me/989109393315',
++  github: 'https://github.com/aminmansuri1377',
++  linkedin: 'https://www.linkedin.com/in/m-amin-mansuri',
++  githubHandle: '@aminmansuri1377',
++  linkedinHandle: 'in/m-amin-mansuri',
++};
+diff --git a/lib/skills.js b/lib/skills.js
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/lib/skills.js
+@@ -0,0 +1,40 @@
++export const SKILL_GROUPS = [
++  {
++    key: 'core',
++    items: [
++      { name: 'HTML', icon: '/assets/skills/html.png' },
++      { name: 'CSS', icon: '/assets/skills/css.png' },
++      { name: 'JavaScript', icon: '/assets/skills/javascript.png' },
++      { name: 'TypeScript', icon: '/assets/skills/type.png' },
++    ],
++  },
++  {
++    key: 'frameworks',
++    items: [
++      { name: 'React', icon: '/assets/skills/react.png' },
++      { name: 'Next.js', icon: '/assets/skills/nextjs.png' },
++      { name: 'Angular', icon: '/assets/skills/Angular.png' },
++      { name: 'Recoil', icon: '/assets/skills/recoil.png' },
++      { name: 'next-auth', icon: '/assets/skills/auth.png' },
++      { name: 'tRPC', icon: '/assets/skills/trpc.png' },
++      { name: 'Prisma', icon: '/assets/skills/prisma.png' },
++      { name: 'Axios', icon: '/assets/skills/Axios.png' },
++    ],
++  },
++  {
++    key: 'ui',
++    items: [
++      { name: 'Tailwind CSS', icon: '/assets/skills/tailwind.png' },
++      { name: 'Material UI', icon: '/assets/skills/material.png' },
++      { name: 'Ant Design', icon: '/assets/skills/ant.png' },
++      { name: 'Bootstrap', icon: '/assets/skills/Bootstrap.png' },
++      { name: 'GSAP', icon: '/assets/skills/gsap.png' },
++      { name: 'Three.js', icon: '/assets/skills/3js.png' },
++      { name: 'Lottie', icon: '/assets/skills/lottie.png' },
++    ],
++  },
++  {
++    key: 'tools',
++    items: [
++      { name: 'GitHub', icon: '/assets/skills/github1.png' },
++      { name: 'GitLab', icon: '/assets/skills/gitlab.png' },
++      { name: 'Photoshop', icon: '/assets/skills/photo.png' },
++      { name: 'CorelDRAW', icon: '/assets/skills/Corel.png' },
++    ],
++  },
++];
+diff --git a/lib/projects.js b/lib/projects.js
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/lib/projects.js
+@@ -0,0 +1,75 @@
++// Project data. Copy (title, tagline, overview, ...) lives in messages/*.json
++// under Projects.cases.<slug>. To add a project: add an entry here, drop the
++// images into public/assets/projects/ and add the copy in both languages.
++export const PROJECTS = [
++  {
++    slug: 'shoplon',
++    type: 'client',
++    image: '/assets/projects/shoplonland.jpg',
++    hero: '/assets/projects/shoplon.jpg',
++    gallery: ['/assets/projects/shoplon.jpg', '/assets/projects/shoplonland.jpg'],
++    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Recoil', 'REST', 'Axios'],
++    live: 'https://shoplon.ir',
++  },
++  {
++    slug: 'magreach',
++    type: 'client',
++    image: '/assets/projects/mag.jpg',
++    hero: '/assets/projects/magr.jpg',
++    gallery: ['/assets/projects/magr.jpg', '/assets/projects/mag.jpg'],
++    tags: ['Next.js', 'Material UI', 'Tailwind CSS', 'Recoil', 'next-auth', 'React Hook Form'],
++    live: 'https://dashboard.magreach.ir',
++  },
++  {
++    slug: 'gameplanet',
++    type: 'own',
++    image: '/assets/projects/planet.jpg',
++    hero: '/assets/projects/gplanet.jpg',
++    gallery: ['/assets/projects/gplanet.jpg', '/assets/projects/planet.jpg'],
++    tags: ['Next.js', 'TypeScript', 'Prisma', 'tRPC', 'Three.js', 'next-auth', 'Supabase', 'i18next'],
++    live: 'https://game-planet-one.vercel.app',
++  },
++  {
++    slug: 'zinamatv',
++    type: 'client',
++    image: '/assets/projects/zeenamatv.png',
++    hero: '/assets/projects/zeenamatv.png',
++    gallery: ['/assets/projects/zeenamatv.png'],
++    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Recoil', 'Material UI', 'next-auth', 'Custom Player'],
++    live: 'https://zinamatv.com',
++  },
++  {
++    slug: 'rentta',
++    type: 'own',
++    image: '/assets/projects/rentta.png',
++    hero: '/assets/projects/rentta.png',
++    gallery: ['/assets/projects/rentta.png', '/assets/projects/property.jpg'],
++    tags: ['Next.js', 'TypeScript', 'Prisma', 'tRPC', 'Leaflet', 'next-auth', 'Supabase', 'i18next'],
++    live: 'https://rentta.ir',
++  },
++  {
++    slug: 'twitch',
++    type: 'study',
++    image: '/assets/projects/twitch.jpg',
++    hero: '/assets/projects/twitch.jpg',
++    gallery: ['/assets/projects/twitch.jpg'],
++    tags: ['Next.js', 'Tailwind CSS', 'next-auth', 'OAuth'],
++    live: null,
++  },
++];
++
++export function getProject(slug) {
++  return PROJECTS.find((p) => p.slug === slug);
++}
+diff --git a/components/Seo.jsx b/components/Seo.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/Seo.jsx
+@@ -0,0 +1,37 @@
++import Head from 'next/head';
++import { useRouter } from 'next/router';
++import { useTranslations } from 'next-intl';
++import { SITE } from '../lib/site';
++
++export default function Seo({ title, description, path }) {
++  const t = useTranslations('Meta');
++  const router = useRouter();
++  const pageTitle = title ? `${title} · ${SITE.name}` : t('title');
++  const desc = description || t('description');
++
++  let clean = path || router.asPath.split('#')[0].split('?')[0];
++  if (clean === '/en') clean = '/';
++  if (clean.startsWith('/en/')) clean = clean.slice(3);
++  if (clean.length > 1 && clean.endsWith('/')) clean = clean.slice(0, -1);
++  const deUrl = SITE.url + (clean === '/' ? '/' : clean);
++  const enUrl = SITE.url + '/en' + (clean === '/' ? '' : clean);
++
++  return (
++    <Head>
++      <title>{pageTitle}</title>
++      <meta name="description" content={desc} />
++      <meta name="viewport" content="width=device-width, initial-scale=1" />
++      <link rel="canonical" href={router.locale === 'en' ? enUrl : deUrl} />
++      <link rel="alternate" hrefLang="de" href={deUrl} />
++      <link rel="alternate" hrefLang="en" href={enUrl} />
++      <link rel="alternate" hrefLang="x-default" href={deUrl} />
++      <meta property="og:type" content="website" />
++      <meta property="og:title" content={pageTitle} />
++      <meta property="og:description" content={desc} />
++      <meta property="og:url" content={router.locale === 'en' ? enUrl : deUrl} />
++      <meta property="og:image" content={`${SITE.url}/icons/icon-512.png`} />
++      <meta property="og:locale" content={router.locale === 'en' ? 'en_US' : 'de_DE'} />
++      <meta name="twitter:card" content="summary" />
++      <meta name="twitter:title" content={pageTitle} />
++      <meta name="twitter:description" content={desc} />
++    </Head>
++  );
++}
+diff --git a/components/ui.jsx b/components/ui.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/ui.jsx
+@@ -0,0 +1,52 @@
++import { motion, useScroll } from 'framer-motion';
++
++export function Reveal({ children, delay = 0, y = 28, className = '' }) {
++  return (
++    <motion.div
++      className={className}
++      initial={{ opacity: 0, y }}
++      whileInView={{ opacity: 1, y: 0 }}
++      viewport={{ once: true, margin: '-80px' }}
++      transition={{ duration: 0.7, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
++    >
++      {children}
++    </motion.div>
++  );
++}
++
++export function Section({ id, kicker, title, subtitle, children, className = '' }) {
++  return (
++    <section id={id} className={`relative scroll-mt-24 py-24 md:py-32 ${className}`}>
++      <div className="container-x">
++        <Reveal>
++          {kicker ? (
++            <p className="font-mono text-xs uppercase tracking-[0.35em] text-lime">{kicker}</p>
++          ) : null}
++          {title ? (
++            <h2 className="mt-4 max-w-3xl font-display text-3xl font-bold leading-tight md:text-5xl">
++              {title}
++            </h2>
++          ) : null}
++          {subtitle ? (
++            <p className="mt-4 max-w-2xl text-muted md:text-lg">{subtitle}</p>
++          ) : null}
++        </Reveal>
++        <div className="mt-12">{children}</div>
++      </div>
++    </section>
++  );
++}
++
++export function Chip({ children }) {
++  return <span className="chip">{children}</span>;
++}
++
++export function ScrollProgress() {
++  const { scrollYProgress } = useScroll();
++  return (
++    <motion.div
++      className="fixed inset-x-0 top-0 z-[60] h-[2px] origin-left bg-lime"
++      style={{ scaleX: scrollYProgress }}
++    />
++  );
++}
+diff --git a/components/layout/Layout.jsx b/components/layout/Layout.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/layout/Layout.jsx
+@@ -0,0 +1,84 @@
++import { useEffect, useState } from 'react';
++import { useRouter } from 'next/router';
++import { motion, useMotionValue, useSpring } from 'framer-motion';
++import Lenis from 'lenis';
++import Navbar from './Navbar';
++import Footer from './Footer';
++import { ScrollProgress } from '../ui';
++
++function Cursor() {
++  const [enabled, setEnabled] = useState(false);
++  const x = useMotionValue(-100);
++  const y = useMotionValue(-100);
++  const sx = useSpring(x, { stiffness: 400, damping: 35 });
++  const sy = useSpring(y, { stiffness: 400, damping: 35 });
++
++  useEffect(() => {
++    const fine = window.matchMedia('(pointer: fine)').matches;
++    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
++    if (!fine || reduced) return undefined;
++    setEnabled(true);
++    const move = (e) => {
++      x.set(e.clientX);
++      y.set(e.clientY);
++    };
++    window.addEventListener('mousemove', move);
++    return () => window.removeEventListener('mousemove', move);
++  }, [x, y]);
++
++  if (!enabled) return null;
++  return (
++    <>
++      <motion.div
++        aria-hidden
++        className="pointer-events-none fixed left-0 top-0 z-[70] hidden h-8 w-8 rounded-full border border-lime/60 mix-blend-difference md:block"
++        style={{ x: sx, y: sy, translateX: '-50%', translateY: '-50%' }}
++      />
++      <motion.div
++        aria-hidden
++        className="pointer-events-none fixed left-0 top-0 z-[70] hidden h-1.5 w-1.5 rounded-full bg-lime md:block"
++        style={{ x, y, translateX: '-50%', translateY: '-50%' }}
++      />
++    </>
++  );
++}
++
++export default function Layout({ children }) {
++  const router = useRouter();
++
++  useEffect(() => {
++    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
++    const lenis = new Lenis({ duration: 1.1, smoothWheel: true });
++    window.__lenis = lenis;
++    let rafId;
++    const raf = (time) => {
++      lenis.raf(time);
++      rafId = requestAnimationFrame(raf);
++    };
++    rafId = requestAnimationFrame(raf);
++    const onRoute = () => {
++      if (!window.location.hash) lenis.scrollTo(0, { immediate: true });
++    };
++    router.events.on('routeChangeComplete', onRoute);
++    return () => {
++      cancelAnimationFrame(rafId);
++      router.events.off('routeChangeComplete', onRoute);
++      lenis.destroy();
++      window.__lenis = null;
++    };
++  }, [router.events]);
++
++  return (
++    <>
++      <Cursor />
++      <ScrollProgress />
++      <div aria-hidden className="grid-bg pointer-events-none fixed inset-0 z-0" />
++      <div aria-hidden className="noise pointer-events-none fixed inset-0 z-50" />
++      <Navbar />
++      <main className="relative z-10">{children}</main>
++      <Footer />
++    </>
++  );
++}
+diff --git a/components/layout/Navbar.jsx b/components/layout/Navbar.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/layout/Navbar.jsx
+@@ -0,0 +1,163 @@
++import { useEffect, useState } from 'react';
++import Link from 'next/link';
++import { useRouter } from 'next/router';
++import { useTranslations } from 'next-intl';
++import { AnimatePresence, motion } from 'framer-motion';
++import { FiMenu, FiX } from 'react-icons/fi';
++import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
++import { SITE } from '../../lib/site';
++
++const SECTIONS = ['about', 'skills', 'experience', 'projects', 'contact'];
++
++export default function Navbar() {
++  const t = useTranslations('Nav');
++  const router = useRouter();
++  const [scrolled, setScrolled] = useState(false);
++  const [open, setOpen] = useState(false);
++  const [active, setActive] = useState('');
++  const isHome = router.pathname === '/';
++
++  useEffect(() => {
++    const onScroll = () => setScrolled(window.scrollY > 12);
++    onScroll();
++    window.addEventListener('scroll', onScroll, { passive: true });
++    return () => window.removeEventListener('scroll', onScroll);
++  }, []);
++
++  useEffect(() => {
++    if (!isHome) return undefined;
++    const observer = new IntersectionObserver(
++      (entries) => {
++        entries.forEach((entry) => {
++          if (entry.isIntersecting) setActive(entry.target.id);
++        });
++      },
++      { rootMargin: '-40% 0px -55% 0px' }
++    );
++    SECTIONS.forEach((id) => {
++      const el = document.getElementById(id);
++      if (el) observer.observe(el);
++    });
++    return () => observer.disconnect();
++  }, [isHome]);
++
++  useEffect(() => {
++    document.body.style.overflow = open ? 'hidden' : '';
++    return () => {
++      document.body.style.overflow = '';
++    };
++  }, [open]);
++
++  const goTo = (id) => (e) => {
++    setOpen(false);
++    if (!isHome) return;
++    e.preventDefault();
++    const el = document.getElementById(id);
++    if (!el) return;
++    if (window.__lenis) window.__lenis.scrollTo(el, { offset: -80 });
++    else el.scrollIntoView({ behavior: 'smooth' });
++    window.history.replaceState(null, '', `#${id}`);
++  };
++
++  const switchLocale = (locale) => {
++    router.replace(router.asPath, router.asPath, { locale, scroll: false });
++  };
++
++  const LocaleToggle = ({ className = '' }) => (
++    <div className={`flex items-center rounded-full border border-white/10 bg-white/5 p-1 ${className}`} role="group" aria-label={t('language')}>
++      {['de', 'en'].map((l) => (
++        <button
++          key={l}
++          onClick={() => switchLocale(l)}
++          className={`rounded-full px-3 py-1 font-mono text-xs uppercase transition-colors ${
++            router.locale === l ? 'bg-lime text-ink-950' : 'text-muted hover:text-white'
++          }`}
++        >
++          {l}
++        </button>
++      ))}
++    </div>
++  );
++
++  return (
++    <header
++      className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
++        scrolled ? 'border-b border-white/5 bg-ink-950/85 backdrop-blur-xl' : 'bg-transparent'
++      }`}
++    >
++      <nav className="container-x flex h-16 items-center justify-between md:h-20">
++        <Link href="/" className="group flex items-center gap-3" aria-label={SITE.name}>
++          <span className="grid h-9 w-9 place-items-center rounded-lg bg-lime font-display text-sm font-bold text-ink-950 transition-transform duration-300 group-hover:rotate-6">
++            AM
++          </span>
++          <span className="hidden font-display text-sm font-semibold tracking-wide sm:block">
++            {SITE.shortName}
++            <span className="text-lime">.dev</span>
++          </span>
++        </Link>
++
++        <div className="hidden items-center gap-7 lg:flex">
++          {SECTIONS.map((id) => (
++            <Link
++              key={id}
++              href={`/#${id}`}
++              onClick={goTo(id)}
++              className={`text-sm transition-colors hover:text-white ${
++                active === id && isHome ? 'text-lime' : 'text-muted'
++              }`}
++            >
++              {t(id)}
++            </Link>
++          ))}
++          <Link
++            href="/cv"
++            className={`text-sm transition-colors hover:text-white ${
++              router.pathname === '/cv' ? 'text-lime' : 'text-muted'
++            }`}
++          >
++            {t('cv')}
++          </Link>
++        </div>
++
++        <div className="flex items-center gap-3">
++          <LocaleToggle className="hidden sm:flex" />
++          <button
++            className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 lg:hidden"
++            onClick={() => setOpen(true)}
++            aria-label={t('menu')}
++          >
++            <FiMenu size={18} />
++          </button>
++        </div>
++      </nav>
++
++      <AnimatePresence>
++        {open && (
++          <motion.div
++            initial={{ opacity: 0 }}
++            animate={{ opacity: 1 }}
++            exit={{ opacity: 0 }}
++            className="fixed inset-0 z-50 flex flex-col bg-ink-950/95 backdrop-blur-xl lg:hidden"
++          >
++            <div className="container-x flex h-16 items-center justify-between">
++              <span className="font-display font-bold">
++                {SITE.shortName}
++                <span className="text-lime">.dev</span>
++              </span>
++              <button
++                className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5"
++                onClick={() => setOpen(false)}
++                aria-label={t('close')}
++              >
++                <FiX size={18} />
++              </button>
++            </div>
++            <div className="container-x flex flex-1 flex-col justify-center gap-2 pb-16">
++              {[...SECTIONS, 'cv'].map((id, i) => (
++                <motion.div
++                  key={id}
++                  initial={{ opacity: 0, x: -24 }}
++                  animate={{ opacity: 1, x: 0 }}
++                  transition={{ delay: 0.06 * i }}
++                >
++                  <Link
++                    href={id === 'cv' ? '/cv' : `/#${id}`}
++                    onClick={id === 'cv' ? () => setOpen(false) : goTo(id)}
++                    className="block py-2 font-display text-3xl font-bold text-white/90 transition-colors hover:text-lime"
++                  >
++                    {t(id)}
++                  </Link>
++                </motion.div>
++              ))}
++              <div className="mt-8 flex items-center gap-4">
++                <LocaleToggle />
++                <a href={SITE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-muted hover:text-white">
++                  <FaGithub size={20} />
++                </a>
++                <a href={SITE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted hover:text-white">
++                  <FaLinkedinIn size={20} />
++                </a>
++              </div>
++            </div>
++          </motion.div>
++        )}
++      </AnimatePresence>
++    </header>
++  );
++}
+diff --git a/components/layout/Footer.jsx b/components/layout/Footer.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/layout/Footer.jsx
+@@ -0,0 +1,77 @@
++import Link from 'next/link';
++import { useTranslations } from 'next-intl';
++import { FiArrowUp, FiMail } from 'react-icons/fi';
++import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
++import { SITE } from '../../lib/site';
++
++export default function Footer() {
++  const t = useTranslations('Footer');
++  const nav = useTranslations('Nav');
++  const year = new Date().getFullYear();
++
++  const toTop = () => {
++    if (window.__lenis) window.__lenis.scrollTo(0);
++    else window.scrollTo({ top: 0, behavior: 'smooth' });
++  };
++
++  return (
++    <footer className="relative z-10 border-t border-white/5 bg-ink-900/60">
++      <div className="container-x grid gap-10 py-14 md:grid-cols-3">
++        <div>
++          <p className="font-display text-lg font-bold">
++            {SITE.name}
++          </p>
++          <p className="mt-3 max-w-xs text-sm text-muted">{t('tagline')}</p>
++          <div className="mt-5 flex gap-3">
++            <a href={SITE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 text-muted transition-colors hover:border-lime/40 hover:text-lime">
++              <FaGithub size={16} />
++            </a>
++            <a href={SITE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 text-muted transition-colors hover:border-lime/40 hover:text-lime">
++              <FaLinkedinIn size={16} />
++            </a>
++            <a href={`mailto:${SITE.email}`} aria-label={SITE.email} className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 text-muted transition-colors hover:border-lime/40 hover:text-lime">
++              <FiMail size={16} />
++            </a>
++          </div>
++        </div>
++        <div>
++          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted">{t('navigation')}</p>
++          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
++            {['about', 'skills', 'experience', 'projects', 'contact'].map((id) => (
++              <Link key={id} href={`/#${id}`} className="text-muted transition-colors hover:text-lime">
++                {nav(id)}
++              </Link>
++            ))}
++            <Link href="/cv" className="text-muted transition-colors hover:text-lime">
++              {nav('cv')}
++            </Link>
++          </div>
++        </div>
++        <div className="md:text-right">
++          <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted">Legal</p>
++          <div className="mt-4 flex flex-col gap-2 text-sm md:items-end">
++            <Link href="/impressum" className="text-muted transition-colors hover:text-lime">
++              {t('impressum')}
++            </Link>
++            <Link href="/datenschutz" className="text-muted transition-colors hover:text-lime">
++              {t('privacy')}
++            </Link>
++            <button onClick={toTop} className="mt-2 inline-flex items-center gap-2 text-muted transition-colors hover:text-lime">
++              {t('top')} <FiArrowUp size={14} />
++            </button>
++          </div>
++        </div>
++      </div>
++      <div className="border-t border-white/5">
++        <div className="container-x flex flex-col gap-2 py-5 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
++          <p>© {year} {SITE.name}. {t('rights')}</p>
++          <p className="font-mono">{t('builtWith')}</p>
++        </div>
++      </div>
++    </footer>
++  );
++}
+diff --git a/components/three/HeroScene.jsx b/components/three/HeroScene.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/three/HeroScene.jsx
+@@ -0,0 +1,92 @@
++import { useEffect, useRef, useState } from 'react';
++import { Canvas, useFrame } from '@react-three/fiber';
++import { Float, MeshDistortMaterial, Sparkles } from '@react-three/drei';
++import { MathUtils } from 'three';
++
++function Sculpture({ reduced }) {
++  const group = useRef();
++  const shell = useRef();
++  const scroll = useRef(0);
++
++  useEffect(() => {
++    const onScroll = () => {
++      const max = document.documentElement.scrollHeight - window.innerHeight;
++      scroll.current = max > 0 ? window.scrollY / max : 0;
++    };
++    onScroll();
++    window.addEventListener('scroll', onScroll, { passive: true });
++    return () => window.removeEventListener('scroll', onScroll);
++  }, []);
++
++  useFrame((state, delta) => {
++    if (!group.current) return;
++    const t = state.clock.elapsedTime;
++    if (!reduced) {
++      group.current.rotation.y += delta * 0.12;
++      shell.current.rotation.z -= delta * 0.05;
++      group.current.position.y = Math.sin(t * 0.6) * 0.12;
++    }
++    const targetX = state.pointer.y * 0.25 + scroll.current * 0.9;
++    group.current.rotation.x = MathUtils.lerp(group.current.rotation.x, targetX, 0.06);
++    group.current.rotation.z = MathUtils.lerp(group.current.rotation.z, state.pointer.x * 0.12, 0.06);
++  });
++
++  return (
++    <group ref={group}>
++      <Float speed={1.4} rotationIntensity={0.35} floatIntensity={0.8}>
++        <mesh scale={1.35}>
++          <sphereGeometry args={[1, 64, 64]} />
++          <MeshDistortMaterial color="#1a1a24" metalness={0.6} roughness={0.25} distort={0.42} speed={1.6} />
++        </mesh>
++      </Float>
++      <mesh ref={shell} scale={2.05}>
++        <icosahedronGeometry args={[1, 1]} />
++        <meshBasicMaterial color="#bfff3c" wireframe transparent opacity={0.28} />
++      </mesh>
++      <mesh rotation={[Math.PI / 2.2, 0, 0]} scale={2.6}>
++        <torusGeometry args={[1, 0.004, 8, 128]} />
++        <meshBasicMaterial color="#8b7cff" transparent opacity={0.5} />
++      </mesh>
++      <mesh rotation={[Math.PI / 1.7, 0.4, 0]} scale={2.9}>
++        <torusGeometry args={[1, 0.002, 8, 128]} />
++        <meshBasicMaterial color="#bfff3c" transparent opacity={0.18} />
++      </mesh>
++      <Sparkles count={80} scale={8} size={2.2} speed={0.3} opacity={0.5} color="#bfff3c" />
++    </group>
++  );
++}
++
++export default function HeroScene() {
++  const [reduced, setReduced] = useState(false);
++
++  useEffect(() => {
++    setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
++  }, []);
++
++  return (
++    <Canvas
++      dpr={[1, 1.8]}
++      camera={{ position: [0, 0, 6], fov: 40 }}
++      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
++      frameloop={reduced ? 'demand' : 'always'}
++      aria-hidden
++    >
++      <ambientLight intensity={0.7} />
++      <directionalLight position={[4, 6, 4]} intensity={2} />
++      <pointLight position={[-5, -2, -4]} intensity={60} distance={18} color="#bfff3c" />
++      <pointLight position={[5, -3, 2]} intensity={40} distance={16} color="#8b7cff" />
++      <Sculpture reduced={reduced} />
++    </Canvas>
++  );
++}
+diff --git a/components/sections/Hero.jsx b/components/sections/Hero.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Hero.jsx
+@@ -0,0 +1,139 @@
++import { useEffect, useRef, useState } from 'react';
++import Link from 'next/link';
++import dynamic from 'next/dynamic';
++import { useTranslations } from 'next-intl';
++import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
++import { FiArrowDown, FiArrowUpRight } from 'react-icons/fi';
++
++const HeroScene = dynamic(() => import('../three/HeroScene'), {
++  ssr: false,
++  loading: () => (
++    <div className="h-full w-full bg-[radial-gradient(circle_at_60%_40%,rgba(191,255,60,0.12),transparent_60%)]" />
++  ),
++});
++
++export default function Hero() {
++  const t = useTranslations('Hero');
++  const roles = t.raw('roles');
++  const stats = t.raw('stats');
++  const [roleIndex, setRoleIndex] = useState(0);
++  const [reduced, setReduced] = useState(false);
++  const ref = useRef(null);
++  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
++  const y = useTransform(scrollYProgress, [0, 1], [0, 140]);
++  const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.15]);
++
++  useEffect(() => {
++    const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
++    setReduced(isReduced);
++    if (isReduced) return undefined;
++    const id = setInterval(() => setRoleIndex((i) => (i + 1) % roles.length), 2600);
++    return () => clearInterval(id);
++  }, [roles.length]);
++
++  return (
++    <section ref={ref} className="relative flex min-h-screen items-center overflow-hidden pt-24">
++      <div className="absolute inset-y-0 right-0 h-full w-full opacity-50 lg:w-[58%] lg:opacity-100">
++        <HeroScene />
++      </div>
++      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/70 to-transparent lg:via-ink-950/30" />
++
++      <motion.div style={{ y, opacity }} className="container-x relative z-10">
++        <div className="max-w-2xl">
++          <motion.div
++            initial={{ opacity: 0, y: 16 }}
++            animate={{ opacity: 1, y: 0 }}
++            transition={{ duration: 0.6 }}
++            className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5"
++          >
++            <span className="relative flex h-2 w-2">
++              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-lime opacity-60" />
++              <span className="relative inline-flex h-2 w-2 rounded-full bg-lime" />
++            </span>
++            <span className="font-mono text-xs text-muted">{t('badge')}</span>
++          </motion.div>
++
++          <motion.p
++            initial={{ opacity: 0 }}
++            animate={{ opacity: 1 }}
++            transition={{ delay: 0.15, duration: 0.6 }}
++            className="mt-8 font-mono text-sm text-muted"
++          >
++            {t('greeting')} <span className="text-white">{t('name')}</span>
++          </motion.p>
++
++          <motion.h1
++            initial={{ opacity: 0, y: 24 }}
++            animate={{ opacity: 1, y: 0 }}
++            transition={{ delay: 0.25, duration: 0.7 }}
++            className="mt-3 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl md:text-7xl"
++          >
++            {t('titleA')}
++            <br />
++            <span className="text-gradient">{t('titleB')}</span>
++          </motion.h1>
++
++          <motion.div
++            initial={{ opacity: 0 }}
++            animate={{ opacity: 1 }}
++            transition={{ delay: 0.4, duration: 0.6 }}
++            className="mt-5 flex h-8 items-center font-display text-lg text-lime sm:text-xl"
++          >
++            <AnimatePresence mode="wait">
++              <motion.span
++                key={roleIndex}
++                initial={{ opacity: 0, y: 12 }}
++                animate={{ opacity: 1, y: 0 }}
++                exit={{ opacity: 0, y: -12 }}
++                transition={{ duration: 0.35 }}
++              >
++                {roles[roleIndex]}
++              </motion.span>
++            </AnimatePresence>
++          </motion.div>
++
++          <motion.p
++            initial={{ opacity: 0, y: 16 }}
++            animate={{ opacity: 1, y: 0 }}
++            transition={{ delay: 0.5, duration: 0.6 }}
++            className="mt-5 max-w-xl text-base leading-relaxed text-muted sm:text-lg"
++          >
++            {t('subtitle')}
++          </motion.p>
++
++          <motion.div
++            initial={{ opacity: 0, y: 16 }}
++            animate={{ opacity: 1, y: 0 }}
++            transition={{ delay: 0.6, duration: 0.6 }}
++            className="mt-9 flex flex-wrap items-center gap-4"
++          >
++            <Link
++              href="/#projects"
++              className="group inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++            >
++              {t('ctaProjects')}
++              <FiArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
++            </Link>
++            <Link
++              href="/#contact"
++              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 font-display text-sm font-semibold text-white transition-colors hover:border-lime/50 hover:text-lime"
++            >
++              {t('ctaContact')}
++            </Link>
++          </motion.div>
++
++          <motion.div
++            initial={{ opacity: 0 }}
++            animate={{ opacity: 1 }}
++            transition={{ delay: 0.75, duration: 0.7 }}
++            className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/10 pt-6"
++          >
++            {stats.map((s) => (
++              <div key={s.label}>
++                <p className="font-display text-3xl font-bold text-lime">{s.value}</p>
++                <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">{s.label}</p>
++              </div>
++            ))}
++          </motion.div>
++        </div>
++      </motion.div>
++
++      <motion.div
++        initial={{ opacity: 0 }}
++        animate={{ opacity: 1 }}
++        transition={{ delay: 1.1 }}
++        className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 flex-col items-center gap-2 md:flex"
++      >
++        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted">{t('scroll')}</span>
++        <motion.span animate={reduced ? {} : { y: [0, 8, 0] }} transition={{ duration: 1.6, repeat: Infinity }}>
++          <FiArrowDown className="text-lime" />
++        </motion.span>
++      </motion.div>
++
++      <p className="absolute bottom-8 right-8 z-10 hidden max-w-[220px] text-right font-mono text-[10px] leading-relaxed text-muted/70 lg:block">
++        {t('scene')}
++      </p>
++    </section>
++  );
++}
+diff --git a/components/sections/Marquee.jsx b/components/sections/Marquee.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Marquee.jsx
+@@ -0,0 +1,21 @@
++import { useTranslations } from 'next-intl';
++
++export default function Marquee() {
++  const t = useTranslations('Marquee');
++  const items = t.raw('items');
++  return (
++    <div className="relative z-10 overflow-hidden border-y border-white/5 bg-ink-900/70 py-5">
++      <div className="marquee-track flex items-center gap-12">
++        {[0, 1].map((copy) => (
++          <div key={copy} aria-hidden={copy === 1} className="flex items-center gap-12">
++            {items.map((item) => (
++              <span key={`${copy}-${item}`} className="flex items-center gap-12 whitespace-nowrap font-display text-lg text-muted">
++                {item}
++                <span className="text-lime">✦</span>
++              </span>
++            ))}
++          </div>
++        ))}
++      </div>
++    </div>
++  );
++}
+diff --git a/components/sections/About.jsx b/components/sections/About.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/About.jsx
+@@ -0,0 +1,76 @@
++import Image from 'next/image';
++import { useTranslations } from 'next-intl';
++import { motion } from 'framer-motion';
++import { FiLayers, FiUsers, FiZap } from 'react-icons/fi';
++import { Section, Reveal, Chip } from '../ui';
++import me from '../../public/assets/me.jpeg';
++
++const ICONS = [FiZap, FiLayers, FiUsers];
++
++export default function About() {
++  const t = useTranslations('About');
++  const highlights = t.raw('highlights');
++  const facts = t.raw('facts');
++
++  return (
++    <Section id="about" kicker={t('kicker')} title={t('title')}>
++      <div className="grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
++        <Reveal>
++          <div className="relative mx-auto max-w-sm">
++            <div aria-hidden className="absolute -inset-3 rotate-2 rounded-3xl border border-lime/25" />
++            <div className="relative overflow-hidden rounded-2xl border border-white/10">
++              <Image
++                src={me}
++                alt={t('photoAlt')}
++                placeholder="blur"
++                className="aspect-[4/5] w-full object-cover"
++                sizes="(max-width: 1024px) 80vw, 380px"
++              />
++              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink-950/90 to-transparent p-4">
++                <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-lime">
++                  Frontend · React · Next.js
++                </p>
++              </div>
++            </div>
++            <motion.div
++              animate={{ y: [0, -8, 0] }}
++              transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
++              className="glass absolute -bottom-5 -right-4 rounded-xl px-4 py-3"
++            >
++              <p className="font-display text-sm font-bold text-lime">{t('badge')}</p>
++            </motion.div>
++          </div>
++        </Reveal>
++
++        <div>
++          <Reveal delay={0.1}>
++            <div className="space-y-5 leading-relaxed text-muted">
++              <p>{t('p1')}</p>
++              <p>{t('p2')}</p>
++              <p className="text-white/90">{t('p3')}</p>
++            </div>
++          </Reveal>
++          <Reveal delay={0.2}>
++            <div className="mt-7 flex flex-wrap gap-2">
++              {facts.map((f) => (
++                <Chip key={f}>{f}</Chip>
++              ))}
++            </div>
++          </Reveal>
++        </div>
++      </div>
++
++      <div className="mt-16 grid gap-5 sm:grid-cols-3">
++        {highlights.map((h, i) => {
++          const Icon = ICONS[i % ICONS.length];
++          return (
++            <Reveal key={h.title} delay={0.08 * i}>
++              <div className="glass h-full rounded-2xl p-6 transition-colors hover:border-lime/30">
++                <Icon className="text-lime" size={22} />
++                <h3 className="mt-4 font-display text-lg font-bold">{h.title}</h3>
++                <p className="mt-2 text-sm leading-relaxed text-muted">{h.text}</p>
++              </div>
++            </Reveal>
++          );
++        })}
++      </div>
++    </Section>
++  );
++}
+diff --git a/components/sections/Skills.jsx b/components/sections/Skills.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Skills.jsx
+@@ -0,0 +1,41 @@
++import Image from 'next/image';
++import { useTranslations } from 'next-intl';
++import { motion } from 'framer-motion';
++import { Section, Reveal } from '../ui';
++import { SKILL_GROUPS } from '../../lib/skills';
++
++export default function Skills() {
++  const t = useTranslations('Skills');
++  return (
++    <Section id="skills" kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')}>
++      <div className="grid gap-6 md:grid-cols-2">
++        {SKILL_GROUPS.map((group, i) => (
++          <Reveal key={group.key} delay={0.07 * i}>
++            <div className="glass h-full rounded-2xl p-6">
++              <p className="font-mono text-xs uppercase tracking-[0.3em] text-lime">
++                {t(`categories.${group.key}`)}
++              </p>
++              <div className="mt-5 flex flex-wrap gap-3">
++                {group.items.map((skill) => (
++                  <motion.div
++                    key={skill.name}
++                    whileHover={{ y: -4 }}
++                    className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-ink-900/80 px-3.5 py-2.5"
++                  >
++                    <Image
++                      src={skill.icon}
++                      alt=""
++                      width={22}
++                      height={22}
++                      className="h-[22px] w-[22px] object-contain"
++                    />
++                    <span className="text-sm text-white/90">{skill.name}</span>
++                  </motion.div>
++                ))}
++              </div>
++            </div>
++          </Reveal>
++        ))}
++      </div>
++    </Section>
++  );
++}
+diff --git a/components/sections/Experience.jsx b/components/sections/Experience.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Experience.jsx
+@@ -0,0 +1,62 @@
++import { useTranslations } from 'next-intl';
++import { FiAward } from 'react-icons/fi';
++import { Section, Reveal } from '../ui';
++
++export default function Experience() {
++  const t = useTranslations('Experience');
++  const items = t.raw('items');
++
++  return (
++    <Section id="experience" kicker={t('kicker')} title={t('title')}>
++      <div className="relative ml-2 space-y-14 border-l border-white/10 pl-8 md:ml-4">
++        {items.map((item, i) => (
++          <Reveal key={item.company} delay={0.05 * i}>
++            <div className="relative">
++              <span className="absolute -left-[41px] top-1.5 h-3 w-3 rounded-full border-2 border-ink-950 bg-lime shadow-glow md:-left-[41px]" />
++              <p className="font-mono text-xs uppercase tracking-[0.25em] text-lime">{item.period}</p>
++              <h3 className="mt-2 font-display text-xl font-bold md:text-2xl">{item.role}</h3>
++              <p className="mt-1 text-sm text-muted">{item.company}</p>
++              <ul className="mt-4 space-y-2">
++                {item.bullets.map((b) => (
++                  <li key={b} className="flex gap-3 text-sm leading-relaxed text-muted">
++                    <span className="mt-0.5 text-lime">▹</span>
++                    <span>{b}</span>
++                  </li>
++                ))}
++              </ul>
++            </div>
++          </Reveal>
++        ))}
++      </div>
++
++      <Reveal delay={0.1}>
++        <div className="glass mt-16 flex flex-col gap-5 rounded-2xl p-7 sm:flex-row sm:items-center">
++          <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-lime/10 text-lime">
++            <FiAward size={22} />
++          </div>
++          <div>
++            <p className="font-mono text-xs uppercase tracking-[0.3em] text-muted">{t('eduTitle')}</p>
++            <h3 className="mt-1 font-display text-lg font-bold">{t('degree')}</h3>
++            <p className="text-sm text-muted">{t('school')}</p>
++            <p className="mt-2 text-sm text-muted">{t('eduNote')}</p>
++          </div>
++        </div>
++      </Reveal>
++    </Section>
++  );
++}
+diff --git a/components/sections/Projects.jsx b/components/sections/Projects.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Projects.jsx
+@@ -0,0 +1,82 @@
++import Image from 'next/image';
++import Link from 'next/link';
++import { useTranslations } from 'next-intl';
++import { FiArrowUpRight } from 'react-icons/fi';
++import { FaGithub } from 'react-icons/fa';
++import { Section, Reveal, Chip } from '../ui';
++import { PROJECTS } from '../../lib/projects';
++import { SITE } from '../../lib/site';
++
++export default function Projects() {
++  const t = useTranslations('Projects');
++
++  return (
++    <Section id="projects" kicker={t('kicker')} title={t('title')} subtitle={t('subtitle')}>
++      <div className="grid gap-6 md:grid-cols-2">
++        {PROJECTS.map((project, i) => (
++          <Reveal
++            key={project.slug}
++            delay={0.06 * i}
++            className={i === 0 ? 'md:col-span-2' : ''}
++          >
++            <Link
++              href={`/projects/${project.slug}`}
++              className="group block overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition-colors duration-300 hover:border-lime/40"
++            >
++              <div className={`relative overflow-hidden ${i === 0 ? 'aspect-[21/9]' : 'aspect-[16/9]'}`}>
++                <Image
++                  src={project.image}
++                  alt={t(`cases.${project.slug}.title`)}
++                  fill
++                  sizes={i === 0 ? '(max-width: 768px) 100vw, 1100px' : '(max-width: 768px) 100vw, 550px'}
++                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
++                />
++                <div className="absolute inset-0 bg-gradient-to-t from-ink-950/80 via-transparent to-transparent" />
++                <span className="glass absolute left-4 top-4 rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-lime">
++                  {t(`types.${project.type}`)}
++                </span>
++              </div>
++              <div className="p-6">
++                <div className="flex items-start justify-between gap-4">
++                  <h3 className="font-display text-xl font-bold transition-colors group-hover:text-lime md:text-2xl">
++                    {t(`cases.${project.slug}.title`)}
++                  </h3>
++                  <FiArrowUpRight
++                    size={22}
++                    className="mt-1 shrink-0 text-muted transition-all group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-lime"
++                  />
++                </div>
++                <p className="mt-2 text-sm leading-relaxed text-muted">
++                  {t(`cases.${project.slug}.tagline`)}
++                </p>
++                <div className="mt-4 flex flex-wrap gap-2">
++                  {project.tags.slice(0, 5).map((tag) => (
++                    <Chip key={tag}>{tag}</Chip>
++                  ))}
++                </div>
++                <p className="mt-4 font-mono text-xs text-lime opacity-0 transition-opacity group-hover:opacity-100">
++                  {t('viewCase')} →
++                </p>
++              </div>
++            </Link>
++          </Reveal>
++        ))}
++      </div>
++
++      <Reveal delay={0.1}>
++        <div className="mt-10 text-center">
++          <a
++            href={SITE.github}
++            target="_blank"
++            rel="noreferrer"
++            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 font-display text-sm font-semibold transition-colors hover:border-lime/50 hover:text-lime"
++          >
++            <FaGithub size={16} />
++            {t('github')}
++          </a>
++        </div>
++      </Reveal>
++    </Section>
++  );
++}
+diff --git a/components/sections/Contact.jsx b/components/sections/Contact.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/sections/Contact.jsx
+@@ -0,0 +1,104 @@
++import { useState } from 'react';
++import { useTranslations } from 'next-intl';
++import { FiCheck, FiCopy, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
++import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
++import { Section, Reveal } from '../ui';
++import { SITE } from '../../lib/site';
++
++export default function Contact() {
++  const t = useTranslations('Contact');
++  const [copied, setCopied] = useState(false);
++
++  const copyEmail = async () => {
++    try {
++      await navigator.clipboard.writeText(SITE.email);
++      setCopied(true);
++      setTimeout(() => setCopied(false), 2000);
++    } catch (e) {
++      // Clipboard unavailable (e.g. insecure context) – ignore.
++    }
++  };
++
++  const cards = [
++    {
++      icon: FiMail,
++      label: t('email'),
++      value: SITE.email,
++      href: `mailto:${SITE.email}`,
++      action: (
++        <button
++          onClick={copyEmail}
++          aria-label={t('copy')}
++          className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-white/10 bg-white/5 text-muted transition-colors hover:border-lime/40 hover:text-lime"
++        >
++          {copied ? <FiCheck size={15} className="text-lime" /> : <FiCopy size={15} />}
++        </button>
++      ),
++    },
++    {
++      icon: FiPhone,
++      label: t('phone'),
++      value: SITE.phoneDisplay,
++      href: SITE.whatsapp,
++    },
++    {
++      icon: FaGithub,
++      label: t('github'),
++      value: SITE.githubHandle,
++      href: SITE.github,
++    },
++    {
++      icon: FaLinkedinIn,
++      label: t('linkedin'),
++      value: SITE.linkedinHandle,
++      href: SITE.linkedin,
++    },
++  ];
++
++  return (
++    <Section id="contact" kicker={t('kicker')} title={t('title')}>
++      <Reveal>
++        <p className="max-w-2xl leading-relaxed text-muted md:text-lg">{t('text')}</p>
++      </Reveal>
++      <Reveal delay={0.1}>
++        <div className="mt-6 inline-flex items-center gap-2 rounded-full border border-lime/30 bg-lime/10 px-4 py-1.5">
++          <span className="h-2 w-2 rounded-full bg-lime" />
++          <span className="font-mono text-xs text-lime">{t('availability')}</span>
++        </div>
++      </Reveal>
++
++      <div className="mt-10 grid gap-4 sm:grid-cols-2">
++        {cards.map((card, i) => {
++          const Icon = card.icon;
++          return (
++            <Reveal key={card.label} delay={0.06 * i}>
++              <div className="glass flex items-center justify-between gap-4 rounded-2xl p-5 transition-colors hover:border-lime/30">
++                <a
++                  href={card.href}
++                  target={card.href.startsWith('http') ? '_blank' : undefined}
++                  rel="noreferrer"
++                  className="flex min-w-0 items-center gap-4"
++                >
++                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-lime/10 text-lime">
++                    <Icon size={18} />
++                  </span>
++                  <span className="min-w-0">
++                    <span className="block font-mono text-[10px] uppercase tracking-[0.25em] text-muted">{card.label}</span>
++                    <span className="block truncate text-sm text-white/90">{card.value}</span>
++                  </span>
++                </a>
++                {card.action}
++              </div>
++            </Reveal>
++          );
++        })}
++      </div>
++
++      <Reveal delay={0.15}>
++        <div className="mt-10 flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
++          <a
++            href={`mailto:${SITE.email}`}
++            className="inline-flex items-center gap-2 rounded-full bg-lime px-8 py-4 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++          >
++            <FiMail size={16} />
++            {t('cta')}
++          </a>
++          <p className="flex items-center gap-2 font-mono text-xs text-muted">
++            <FiMapPin size={14} className="text-lime" />
++            {t('location')}: {t('locationValue')}
++          </p>
++        </div>
++      </Reveal>
++    </Section>
++  );
++}
+diff --git a/components/ProjectCase.jsx b/components/ProjectCase.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/components/ProjectCase.jsx
+@@ -0,0 +1,139 @@
++import Image from 'next/image';
++import Link from 'next/link';
++import { useTranslations } from 'next-intl';
++import { FiArrowLeft, FiArrowUpRight, FiExternalLink } from 'react-icons/fi';
++import Seo from './Seo';
++import { Reveal, Chip } from './ui';
++import { PROJECTS, getProject } from '../lib/projects';
++
++export default function ProjectCase({ slug }) {
++  const project = getProject(slug);
++  const t = useTranslations(`Projects.cases.${slug}`);
++  const p = useTranslations('Projects');
++  const c = useTranslations('Case');
++
++  const index = PROJECTS.findIndex((x) => x.slug === slug);
++  const prev = PROJECTS[(index - 1 + PROJECTS.length) % PROJECTS.length];
++  const next = PROJECTS[(index + 1) % PROJECTS.length];
++
++  const blocks = [
++    { key: 'overview', text: t('overview') },
++    { key: 'challenge', text: t('challenge') },
++    { key: 'solution', text: t('solution') },
++    { key: 'outcome', text: t('outcome') },
++  ];
++
++  return (
++    <>
++      <Seo title={t('title')} description={t('tagline')} />
++      <article className="container-x pb-24 pt-32">
++        <Reveal>
++          <Link href="/#projects" className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.25em] text-muted transition-colors hover:text-lime">
++            <FiArrowLeft size={14} />
++            {c('back')}
++          </Link>
++          <div className="mt-8 flex flex-wrap items-center gap-3">
++            <Chip>{p(`types.${project.type}`)}</Chip>
++            <Chip>{c('role')}: {t('role')}</Chip>
++          </div>
++          <h1 className="mt-5 font-display text-4xl font-bold leading-tight md:text-6xl">{t('title')}</h1>
++          <p className="mt-4 max-w-3xl text-lg text-muted">{t('tagline')}</p>
++        </Reveal>
++
++        <Reveal delay={0.1}>
++          <div className="relative mt-10 aspect-[21/10] overflow-hidden rounded-2xl border border-white/10">
++            <Image
++              src={project.hero}
++              alt={t('title')}
++              fill
++              priority
++              sizes="(max-width: 1200px) 100vw, 1100px"
++              className="object-cover"
++            />
++          </div>
++        </Reveal>
++
++        <div className="mt-14 grid gap-12 lg:grid-cols-[1.6fr_1fr]">
++          <div className="space-y-10">
++            {blocks.map((block, i) => (
++              <Reveal key={block.key} delay={0.04 * i}>
++                <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{c(block.key)}</h2>
++                <p className="mt-3 leading-relaxed text-muted md:text-lg">{block.text}</p>
++              </Reveal>
++            ))}
++            <Reveal>
++              <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{c('features')}</h2>
++              <ul className="mt-4 grid gap-2 sm:grid-cols-2">
++                {t.raw('features').map((f) => (
++                  <li key={f} className="flex gap-3 text-sm text-muted">
++                    <span className="text-lime">▹</span>
++                    <span>{f}</span>
++                  </li>
++                ))}
++              </ul>
++            </Reveal>
++          </div>
++
++          <div className="space-y-6 lg:sticky lg:top-28 lg:self-start">
++            <Reveal delay={0.1}>
++              <div className="glass rounded-2xl p-6">
++                <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted">{c('stack')}</h2>
++                <div className="mt-4 flex flex-wrap gap-2">
++                  {project.tags.map((tag) => (
++                    <Chip key={tag}>{tag}</Chip>
++                  ))}
++                </div>
++                {project.live ? (
++                  <a
++                    href={project.live}
++                    target="_blank"
++                    rel="noreferrer"
++                    className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-lime px-6 py-3 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++                  >
++                    <FiExternalLink size={15} />
++                    {c('live')}
++                  </a>
++                ) : (
++                  <p className="mt-6 text-sm text-muted">{c('noLive')}</p>
++                )}
++              </div>
++            </Reveal>
++            {project.gallery.length > 1 && (
++              <Reveal delay={0.15}>
++                <div className="glass rounded-2xl p-6">
++                  <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-muted">{c('gallery')}</h2>
++                  <div className="mt-4 space-y-4">
++                    {project.gallery.slice(1).map((src) => (
++                      <div key={src} className="relative aspect-video overflow-hidden rounded-xl border border-white/10">
++                        <Image src={src} alt={t('title')} fill sizes="(max-width: 1024px) 100vw, 360px" className="object-cover" />
++                      </div>
++                    ))}
++                  </div>
++                </div>
++              </Reveal>
++            )}
++          </div>
++        </div>
++
++        <Reveal>
++          <div className="mt-20 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-2">
++            <Link href={`/projects/${prev.slug}`} className="group glass rounded-2xl p-5 transition-colors hover:border-lime/30">
++              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">← {c('prev')}</p>
++              <p className="mt-2 font-display text-lg font-bold transition-colors group-hover:text-lime">
++                {p(`cases.${prev.slug}.title`)}
++              </p>
++            </Link>
++            <Link href={`/projects/${next.slug}`} className="group glass rounded-2xl p-5 text-right transition-colors hover:border-lime/30">
++              <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted">{c('next')} →</p>
++              <p className="mt-2 font-display text-lg font-bold transition-colors group-hover:text-lime">
++                {p(`cases.${next.slug}.title`)}
++              </p>
++            </Link>
++          </div>
++        </Reveal>
++      </article>
++    </>
++  );
++}
+diff --git a/pages/projects/[slug].jsx b/pages/projects/[slug].jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/pages/projects/[slug].jsx
+@@ -0,0 +1,21 @@
++import ProjectCase from '../../components/ProjectCase';
++import { PROJECTS } from '../../lib/projects';
++
++export default function ProjectPage({ slug }) {
++  return <ProjectCase slug={slug} />;
++}
++
++export function getStaticPaths() {
++  return {
++    paths: PROJECTS.map((p) => ({ params: { slug: p.slug } })),
++    fallback: false,
++  };
++}
++
++export function getStaticProps({ params }) {
++  return { props: { slug: params.slug } };
++}
+diff --git a/pages/cv.jsx b/pages/cv.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/pages/cv.jsx
+@@ -0,0 +1,118 @@
++import { useTranslations } from 'next-intl';
++import { FiDownload, FiMail } from 'react-icons/fi';
++import Seo from '../components/Seo';
++import { Reveal, Chip } from '../components/ui';
++import { SKILL_GROUPS } from '../lib/skills';
++import { SITE } from '../lib/site';
++
++export default function CV() {
++  const t = useTranslations('CV');
++  const exp = useTranslations('Experience');
++  const skills = useTranslations('Skills');
++  const contact = useTranslations('Contact');
++  const items = exp.raw('items');
++  const languages = t.raw('langItems');
++
++  return (
++    <>
++      <Seo title={t('title')} />
++      <div className="container-x max-w-4xl pb-24 pt-32">
++        <div className="no-print flex flex-wrap gap-3">
++          <button
++            onClick={() => window.print()}
++            className="inline-flex items-center gap-2 rounded-full bg-lime px-6 py-3 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++          >
++            <FiDownload size={15} />
++            {t('print')}
++          </button>
++          <a
++            href={`mailto:${SITE.email}?subject=CV%20Request`}
++            className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 font-display text-sm font-semibold transition-colors hover:border-lime/50 hover:text-lime"
++          >
++            <FiMail size={15} />
++            {t('request')}
++          </a>
++        </div>
++
++        <Reveal>
++          <header className="mt-10 border-b border-white/10 pb-8">
++            <p className="font-mono text-xs uppercase tracking-[0.35em] text-lime">{t('title')}</p>
++            <h1 className="mt-3 font-display text-4xl font-bold md:text-5xl">{SITE.name}</h1>
++            <p className="mt-2 text-lg text-muted">Frontend Developer · React · Next.js · TypeScript</p>
++            <div className="mt-5 flex flex-wrap gap-2">
++              <Chip>{SITE.email}</Chip>
++              <Chip>{SITE.phoneDisplay}</Chip>
++              <Chip>{contact('locationValue')}</Chip>
++              <Chip>{SITE.githubHandle}</Chip>
++            </div>
++          </header>
++        </Reveal>
++
++        <Reveal>
++          <section className="mt-10">
++            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{t('profile')}</h2>
++            <p className="mt-3 leading-relaxed text-muted">{t('profileText')}</p>
++          </section>
++        </Reveal>
++
++        <section className="mt-10">
++          <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{exp('kicker')}</h2>
++          <div className="mt-6 space-y-8">
++            {items.map((item) => (
++              <Reveal key={item.company}>
++                <div className="border-l border-white/10 pl-6">
++                  <p className="font-mono text-xs text-lime">{item.period}</p>
++                  <h3 className="mt-1 font-display text-lg font-bold">{item.role}</h3>
++                  <p className="text-sm text-muted">{item.company}</p>
++                  <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-muted">
++                    {item.bullets.map((b) => (
++                      <li key={b}>{b}</li>
++                    ))}
++                  </ul>
++                </div>
++              </Reveal>
++            ))}
++          </div>
++        </section>
++
++        <Reveal>
++          <section className="mt-10">
++            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{exp('eduTitle')}</h2>
++            <p className="mt-3 font-display font-bold">{exp('degree')}</p>
++            <p className="text-sm text-muted">{exp('school')}</p>
++          </section>
++        </Reveal>
++
++        <Reveal>
++          <section className="mt-10">
++            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{t('skills')}</h2>
++            <div className="mt-4 grid gap-4 sm:grid-cols-2">
++              {SKILL_GROUPS.map((group) => (
++                <div key={group.key}>
++                  <p className="text-sm font-semibold text-white/90">{skills(`categories.${group.key}`)}</p>
++                  <p className="mt-1 text-sm text-muted">{group.items.map((s) => s.name).join(' · ')}</p>
++                </div>
++              ))}
++            </div>
++          </section>
++        </Reveal>
++
++        <Reveal>
++          <section className="mt-10">
++            <h2 className="font-mono text-xs uppercase tracking-[0.3em] text-lime">{t('languages')}</h2>
++            <div className="mt-4 flex flex-wrap gap-2">
++              {languages.map((l) => (
++                <Chip key={l.name}>{l.name} — {l.level}</Chip>
++              ))}
++            </div>
++          </section>
++        </Reveal>
++      </div>
++    </>
++  );
++}
+diff --git a/pages/impressum.jsx b/pages/impressum.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/pages/impressum.jsx
+@@ -0,0 +1,41 @@
++import { useTranslations } from 'next-intl';
++import Seo from '../components/Seo';
++import { Reveal } from '../components/ui';
++import { SITE } from '../lib/site';
++
++export default function Impressum() {
++  const t = useTranslations('Impressum');
++  const blocks = t.raw('blocks');
++
++  return (
++    <>
++      <Seo title={t('title')} />
++      <div className="container-x max-w-3xl pb-24 pt-32">
++        <Reveal>
++          <h1 className="font-display text-4xl font-bold">{t('title')}</h1>
++          <p className="mt-6 rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200">
++            {t('notice')}
++          </p>
++        </Reveal>
++        <div className="mt-10 space-y-8">
++          {blocks.map((block) => (
++            <Reveal key={block.h}>
++              <h2 className="font-display text-lg font-bold">{block.h}</h2>
++              <p className="mt-2 whitespace-pre-line leading-relaxed text-muted">{block.p}</p>
++            </Reveal>
++          ))}
++          <Reveal>
++            <h2 className="font-display text-lg font-bold">{t('contactH')}</h2>
++            <p className="mt-2 text-muted">
++              E-Mail:{' '}
++              <a href={`mailto:${SITE.email}`} className="text-lime underline-offset-4 hover:underline">
++                {SITE.email}
++              </a>
++            </p>
++          </Reveal>
++        </div>
++      </div>
++    </>
++  );
++}
+diff --git a/pages/datenschutz.jsx b/pages/datenschutz.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/pages/datenschutz.jsx
+@@ -0,0 +1,30 @@
++import { useTranslations } from 'next-intl';
++import Seo from '../components/Seo';
++import { Reveal } from '../components/ui';
++
++export default function Datenschutz() {
++  const t = useTranslations('Privacy');
++  const blocks = t.raw('blocks');
++
++  return (
++    <>
++      <Seo title={t('title')} />
++      <div className="container-x max-w-3xl pb-24 pt-32">
++        <Reveal>
++          <h1 className="font-display text-4xl font-bold">{t('title')}</h1>
++          <p className="mt-3 font-mono text-xs text-muted">{t('updated')}</p>
++        </Reveal>
++        <div className="mt-10 space-y-8">
++          {blocks.map((block) => (
++            <Reveal key={block.h}>
++              <h2 className="font-display text-lg font-bold">{block.h}</h2>
++              <p className="mt-2 leading-relaxed text-muted">{block.p}</p>
++            </Reveal>
++          ))}
++        </div>
++      </div>
++    </>
++  );
++}
+diff --git a/pages/404.jsx b/pages/404.jsx
+new file mode 100644
+index 0000000..532460c
+--- /dev/null
++++ b/pages/404.jsx
+@@ -0,0 +1,26 @@
++import Link from 'next/link';
++import { useTranslations } from 'next-intl';
++import { FiArrowLeft } from 'react-icons/fi';
++import Seo from '../components/Seo';
++
++export default function NotFound() {
++  const t = useTranslations('NotFound');
++  return (
++    <>
++      <Seo title={t('title')} />
++      <div className="container-x flex min-h-screen flex-col items-center justify-center text-center">
++        <p className="text-gradient font-display text-[120px] font-bold leading-none md:text-[180px]">404</p>
++        <h1 className="mt-4 font-display text-2xl font-bold">{t('title')}</h1>
++        <p className="mt-3 max-w-md text-muted">{t('text')}</p>
++        <Link
++          href="/"
++          className="mt-8 inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++        >
++          <FiArrowLeft size={15} />
++          {t('home')}
++        </Link>
++      </div>
++    </>
++  );
++}
