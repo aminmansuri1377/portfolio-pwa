@@ -15,12 +15,17 @@
     "close": "Close menu"
   },
   "Hero": {
-    "badge": "Open to new roles in Germany",
+    "badge": "Open to new roles",
     "greeting": "Hi, I am",
     "name": "Mohamad Amin Mansori",
     "titleA": "I build interfaces",
     "titleB": "people remember.",
-    "roles": ["Frontend Developer", "React & Next.js Specialist", "Creative Developer", "TypeScript Enthusiast"],
+    "roles": [
+      "Frontend Developer",
+      "React & Next.js Specialist",
+      "Creative Developer",
+      "TypeScript Enthusiast"
+    ],
     "subtitle": "Frontend developer with 5+ years of experience: I combine precise, maintainable code with thoughtful design – from e-commerce platforms and dashboards to interactive 3D experiences in the browser.",
     "ctaProjects": "Explore projects",
     "ctaContact": "Get in touch",
@@ -33,7 +38,22 @@
     "scene": "Interactive 3D object – reacts to your mouse and scroll"
   },
   "Marquee": {
-    "items": ["React", "Next.js", "TypeScript", "Three.js", "Tailwind CSS", "Angular", "GSAP", "Framer Motion", "Prisma", "tRPC", "Recoil", "Material UI", "GitLab CI", "Vercel"]
+    "items": [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Three.js",
+      "Tailwind CSS",
+      "Angular",
+      "GSAP",
+      "Framer Motion",
+      "Prisma",
+      "tRPC",
+      "Recoil",
+      "Material UI",
+      "GitLab CI",
+      "Vercel"
+    ]
   },
   "About": {
     "kicker": "01 — About",
@@ -43,11 +63,24 @@
     "p3": "I am currently looking for a new challenge in Germany, remote or on-site. I want to bring my expertise into a strong team and build products people genuinely enjoy using.",
     "photoAlt": "Portrait of Mohamad Amin Mansori",
     "badge": "5+ years of experience",
-    "facts": ["React · Next.js · TypeScript", "B.Sc. Industrial Engineering", "Iran · open to Germany & remote"],
+    "facts": [
+      "React · Next.js · TypeScript",
+      "B.Sc. Industrial Engineering",
+      "Iran · open to Germany & remote"
+    ],
     "highlights": [
-      { "title": "Performance & quality", "text": "Clean component architecture, TypeScript, testing and optimized load times – measurable in Core Web Vitals." },
-      { "title": "Design & motion", "text": "From wireframe idea to polished UI: Tailwind CSS, Material UI, GSAP, Framer Motion and Three.js." },
-      { "title": "Collaboration", "text": "Experience with Git, GitLab, CI/CD, code reviews and direct client communication – in English and Persian." }
+      {
+        "title": "Performance & quality",
+        "text": "Clean component architecture, TypeScript, testing and optimized load times – measurable in Core Web Vitals."
+      },
+      {
+        "title": "Design & motion",
+        "text": "From wireframe idea to polished UI: Tailwind CSS, Material UI, GSAP, Framer Motion and Three.js."
+      },
+      {
+        "title": "Collaboration",
+        "text": "Experience with Git, GitLab, CI/CD, code reviews and direct client communication – in English and Persian."
+      }
     ]
   },
   "Skills": {
@@ -106,7 +139,11 @@
     "subtitle": "Six projects that show how I think and build. This section keeps growing – new projects are on the way.",
     "viewCase": "View case study",
     "github": "More projects on GitHub",
-    "types": { "client": "Client project", "own": "Own project", "study": "UI study" },
+    "types": {
+      "client": "Client project",
+      "own": "Own project",
+      "study": "UI study"
+    },
     "cases": {
       "shoplon": {
         "title": "Shoplon",
@@ -116,7 +153,13 @@
         "challenge": "An interface that feels like a social network but offers the reliability of a shop: infinite scroll, real-time chat, profiles, search and comments – without sacrificing performance.",
         "solution": "Built with Next.js and TypeScript, Tailwind CSS for a consistent UI and Recoil for fine-grained state. REST APIs are consumed via Axios; infinite scroll and code splitting keep the app fast.",
         "outcome": "A production platform that makes selling through social media significantly easier for merchants – with a buyer experience that feels native.",
-        "features": ["Instagram integration for shops", "Infinite scroll & product search", "Profiles, follow & comments", "Buyer–seller chat", "Login & user management"]
+        "features": [
+          "Instagram integration for shops",
+          "Infinite scroll & product search",
+          "Profiles, follow & comments",
+          "Buyer–seller chat",
+          "Login & user management"
+        ]
       },
       "magreach": {
         "title": "MagReach Dashboard",
@@ -126,7 +169,13 @@
         "challenge": "Complex business logic – wallets, roles, advertisers and their social accounts – in an interface the team can operate quickly and without errors.",
         "solution": "Next.js with Material UI and Tailwind CSS, Recoil for app state and React Hook Form for robust, validated forms. next-auth secures access.",
         "outcome": "The team manages campaigns, users and analytics in one place – with far less manual effort and clearer decision-making.",
-        "features": ["Wallet & transaction overview", "User & role management", "Advertisers incl. social accounts", "Validated forms with React Hook Form", "Secure login with next-auth"]
+        "features": [
+          "Wallet & transaction overview",
+          "User & role management",
+          "Advertisers incl. social accounts",
+          "Validated forms with React Hook Form",
+          "Secure login with next-auth"
+        ]
       },
       "gameplanet": {
         "title": "GamePlanet",
@@ -136,7 +185,13 @@
         "challenge": "A rental shop that goes beyond the standard: 3D product views, end-to-end type safety from database to UI, and a dashboard covering the entire order flow.",
         "solution": "Next.js and TypeScript as the foundation, Prisma + tRPC for type-safe APIs, Supabase as the database, next-auth for login and Three.js for interactive product views. i18next makes the app international.",
         "outcome": "A complete full-stack product combining design, 3D and clean architecture – deployed on Vercel and ready for real users.",
-        "features": ["3D product views with Three.js", "Type-safe API with Prisma & tRPC", "Dashboard for products, orders & users", "Authentication with next-auth", "Multi-language with i18next"]
+        "features": [
+          "3D product views with Three.js",
+          "Type-safe API with Prisma & tRPC",
+          "Dashboard for products, orders & users",
+          "Authentication with next-auth",
+          "Multi-language with i18next"
+        ]
       },
       "zinamatv": {
         "title": "ZinemaTV",
@@ -146,7 +201,13 @@
         "challenge": "An editorial system that serves three very different user groups while staying intuitive: managing movies, users and website sections centrally.",
         "solution": "React and Material UI for the dashboard, Next.js and Tailwind for the platform, Recoil for state and next-auth for roles. The custom player is tailored to the platform's needs.",
         "outcome": "The team maintains the catalog, users and website content entirely on their own – no developer involvement in day-to-day operations.",
-        "features": ["Custom video player", "Dashboard for 3 roles", "Movie & user management", "Control of all website sections", "Role-based access with next-auth"]
+        "features": [
+          "Custom video player",
+          "Dashboard for 3 roles",
+          "Movie & user management",
+          "Control of all website sections",
+          "Role-based access with next-auth"
+        ]
       },
       "rentta": {
         "title": "Rentta",
@@ -156,7 +217,13 @@
         "challenge": "A two-sided marketplace with a geo dimension: listings must be discoverable, requests traceable, and management simple for both sides.",
         "solution": "Next.js + Prisma + tRPC as a type-safe full-stack foundation, Supabase for data, Leaflet for the map view, next-auth for login and i18next for multi-language support.",
         "outcome": "A complete platform from idea to deployment – with map search, a dashboard and a clean API architecture.",
-        "features": ["Map view with Leaflet", "Create & manage listings", "Requests & orders", "Type-safe API with tRPC", "Multi-language interface"]
+        "features": [
+          "Map view with Leaflet",
+          "Create & manage listings",
+          "Requests & orders",
+          "Type-safe API with tRPC",
+          "Multi-language interface"
+        ]
       },
       "twitch": {
         "title": "Twitch UI",
@@ -166,7 +233,12 @@
         "challenge": "Decomposing a complex, dense UI like Twitch into clean components while preserving responsiveness and performance.",
         "solution": "Next.js with Tailwind CSS for the layout, next-auth for OAuth (GitHub & Google) and the Next.js Image component for optimized lazy loading.",
         "outcome": "A study demonstrating how I analyze complex interfaces, turn them into components and implement auth flows correctly.",
-        "features": ["Responsive Twitch recreation", "OAuth with GitHub & Google", "Optimized image lazy loading", "Reusable components"]
+        "features": [
+          "Responsive Twitch recreation",
+          "OAuth with GitHub & Google",
+          "Optimized image lazy loading",
+          "Reusable components"
+        ]
       }
     }
   },
@@ -228,22 +300,52 @@
     "notice": "Note: the details below are placeholders and must be replaced with real contact information before going live.",
     "contactH": "Contact",
     "blocks": [
-      { "h": "Information according to § 5 DDG", "p": "Mohamad Amin Mansori\n[Street and number]\n[Postal code and city]\n[Country]" },
-      { "h": "Responsible for content according to § 18 (2) MStV", "p": "Mohamad Amin Mansori\n[Address as above]" },
-      { "h": "Liability for content", "p": "The contents of these pages were created with the utmost care. However, no guarantee can be given for the accuracy, completeness or timeliness of the content." },
-      { "h": "Liability for links", "p": "This website contains links to external third-party websites over whose content we have no influence. The respective provider is always responsible for the content of linked pages." }
+      {
+        "h": "Information according to § 5 DDG",
+        "p": "Mohamad Amin Mansori\n[Street and number]\n[Postal code and city]\n[Country]"
+      },
+      {
+        "h": "Responsible for content according to § 18 (2) MStV",
+        "p": "Mohamad Amin Mansori\n[Address as above]"
+      },
+      {
+        "h": "Liability for content",
+        "p": "The contents of these pages were created with the utmost care. However, no guarantee can be given for the accuracy, completeness or timeliness of the content."
+      },
+      {
+        "h": "Liability for links",
+        "p": "This website contains links to external third-party websites over whose content we have no influence. The respective provider is always responsible for the content of linked pages."
+      }
     ]
   },
   "Privacy": {
     "title": "Privacy Policy",
     "updated": "Last updated: November 2026",
     "blocks": [
-      { "h": "1. Controller", "p": "Responsible for data processing on this website is Mohamad Amin Mansori. Contact details can be found in the legal notice (Impressum)." },
-      { "h": "2. Hosting", "p": "This website is hosted by Vercel Inc. When pages are accessed, the host processes technically necessary server log data (e.g. IP address, timestamp, requested file) to ensure operation and security. The legal basis is Art. 6(1)(f) GDPR." },
-      { "h": "3. No cookies, no tracking", "p": "This website does not use analytics or marketing cookies and does not use tracking services. No usage profiles are created." },
-      { "h": "4. Fonts", "p": "Fonts are served locally via the Next.js font mechanism. No connection to Google font servers is made." },
-      { "h": "5. Contact", "p": "If you contact us by email, your details are processed to handle the request. The legal basis is Art. 6(1)(b) or (f) GDPR. Data is deleted as soon as it is no longer required." },
-      { "h": "6. Your rights", "p": "You have the right to access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and objection (Art. 21). You also have the right to lodge a complaint with a data protection supervisory authority." }
+      {
+        "h": "1. Controller",
+        "p": "Responsible for data processing on this website is Mohamad Amin Mansori. Contact details can be found in the legal notice (Impressum)."
+      },
+      {
+        "h": "2. Hosting",
+        "p": "This website is hosted by Vercel Inc. When pages are accessed, the host processes technically necessary server log data (e.g. IP address, timestamp, requested file) to ensure operation and security. The legal basis is Art. 6(1)(f) GDPR."
+      },
+      {
+        "h": "3. No cookies, no tracking",
+        "p": "This website does not use analytics or marketing cookies and does not use tracking services. No usage profiles are created."
+      },
+      {
+        "h": "4. Fonts",
+        "p": "Fonts are served locally via the Next.js font mechanism. No connection to Google font servers is made."
+      },
+      {
+        "h": "5. Contact",
+        "p": "If you contact us by email, your details are processed to handle the request. The legal basis is Art. 6(1)(b) or (f) GDPR. Data is deleted as soon as it is no longer required."
+      },
+      {
+        "h": "6. Your rights",
+        "p": "You have the right to access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and objection (Art. 21). You also have the right to lodge a complaint with a data protection supervisory authority."
+      }
     ]
   },
   "NotFound": {

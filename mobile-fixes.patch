@@ -1,0 +1,557 @@
+diff --git a/components/layout/Navbar.jsx b/components/layout/Navbar.jsx
+index 99fb0f4..d1956f5 100644
+--- a/components/layout/Navbar.jsx
++++ b/components/layout/Navbar.jsx
+@@ -43,13 +43,29 @@ export default function Navbar() {
+ 
+   useEffect(() => {
+     document.body.style.overflow = open ? 'hidden' : '';
++    if (open) window.__lenis?.stop();
++    else window.__lenis?.start();
+     return () => {
+       document.body.style.overflow = '';
++      window.__lenis?.start();
+     };
+   }, [open]);
+ 
++  // close the menu when the route changes or the viewport grows to desktop
++  useEffect(() => {
++    const close = () => setOpen(false);
++    router.events.on('routeChangeStart', close);
++    const mq = window.matchMedia('(min-width: 1024px)');
++    mq.addEventListener('change', close);
++    return () => {
++      router.events.off('routeChangeStart', close);
++      mq.removeEventListener('change', close);
++    };
++  }, [router.events]);
++
+   const goTo = (id) => (e) => {
+     setOpen(false);
++    window.__lenis?.start(); // menu stops Lenis while open; scrollTo is ignored when stopped
+     if (!isHome) return;
+     e.preventDefault();
+     const el = document.getElementById(id);
+@@ -80,108 +96,114 @@ export default function Navbar() {
+   );
+ 
+   return (
+-    <header
+-      className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
+-        scrolled ? 'border-b border-white/5 bg-ink-950/85 backdrop-blur-xl' : 'bg-transparent'
+-      }`}
+-    >
+-      <nav className="container-x flex h-16 items-center justify-between md:h-20">
+-        <Link href="/" className="group flex items-center gap-3" aria-label={SITE.name}>
+-          <span className="grid h-9 w-9 place-items-center rounded-lg bg-lime font-display text-sm font-bold text-ink-950 transition-transform duration-300 group-hover:rotate-6">
+-            AM
+-          </span>
+-          <span className="hidden font-display text-sm font-semibold tracking-wide sm:block">
+-            {SITE.shortName}
+-            <span className="text-lime">.dev</span>
+-          </span>
+-        </Link>
++    <>
++      <header
++        className={`fixed inset-x-0 top-0 z-40 transition-all duration-300 ${
++          scrolled ? 'border-b border-white/5 bg-ink-950/85 backdrop-blur-xl' : 'bg-transparent'
++        }`}
++      >
++        <nav className="container-x flex h-16 items-center justify-between md:h-20">
++          <Link href="/" className="group flex items-center gap-3" aria-label={SITE.name}>
++            <span className="grid h-9 w-9 place-items-center rounded-lg bg-lime font-display text-sm font-bold text-ink-950 transition-transform duration-300 group-hover:rotate-6">
++              AM
++            </span>
++            <span className="hidden font-display text-sm font-semibold tracking-wide sm:block">
++              {SITE.shortName}
++              <span className="text-lime">.dev</span>
++            </span>
++          </Link>
+ 
+-        <div className="hidden items-center gap-7 lg:flex">
+-          {SECTIONS.map((id) => (
++          <div className="hidden items-center gap-7 lg:flex">
++            {SECTIONS.map((id) => (
++              <Link
++                key={id}
++                href={`/#${id}`}
++                onClick={goTo(id)}
++                className={`text-sm transition-colors hover:text-white ${
++                  active === id && isHome ? 'text-lime' : 'text-muted'
++                }`}
++              >
++                {t(id)}
++              </Link>
++            ))}
+             <Link
+-              key={id}
+-              href={`/#${id}`}
+-              onClick={goTo(id)}
++              href="/cv"
+               className={`text-sm transition-colors hover:text-white ${
+-                active === id && isHome ? 'text-lime' : 'text-muted'
++                router.pathname === '/cv' ? 'text-lime' : 'text-muted'
+               }`}
+             >
+-              {t(id)}
++              {t('cv')}
+             </Link>
+-          ))}
+-          <Link
+-            href="/cv"
+-            className={`text-sm transition-colors hover:text-white ${
+-              router.pathname === '/cv' ? 'text-lime' : 'text-muted'
+-            }`}
+-          >
+-            {t('cv')}
+-          </Link>
+-        </div>
++          </div>
+ 
+-        <div className="flex items-center gap-3">
+-          <LocaleToggle className="hidden sm:flex" />
+-          <button
+-            className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 lg:hidden"
+-            onClick={() => setOpen(true)}
+-            aria-label={t('menu')}
+-          >
+-            <FiMenu size={18} />
+-          </button>
+-        </div>
+-      </nav>
++          <div className="flex items-center gap-3">
++            <LocaleToggle className="hidden sm:flex" />
++            <button
++              className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5 lg:hidden"
++              onClick={() => setOpen(true)}
++              aria-label={t('menu')}
++            >
++              <FiMenu size={18} />
++            </button>
++          </div>
++        </nav>
++      </header>
+ 
+-      <AnimatePresence>
+-        {open && (
+-          <motion.div
+-            initial={{ opacity: 0 }}
+-            animate={{ opacity: 1 }}
+-            exit={{ opacity: 0 }}
+-            className="fixed inset-0 z-50 flex flex-col bg-ink-950/95 backdrop-blur-xl lg:hidden"
+-          >
+-            <div className="container-x flex h-16 items-center justify-between">
+-              <span className="font-display font-bold">
+-                {SITE.shortName}
+-                <span className="text-lime">.dev</span>
+-              </span>
+-              <button
+-                className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5"
+-                onClick={() => setOpen(false)}
+-                aria-label={t('close')}
+-              >
+-                <FiX size={18} />
+-              </button>
+-            </div>
+-            <div className="container-x flex flex-1 flex-col justify-center gap-2 pb-16">
+-              {[...SECTIONS, 'cv'].map((id, i) => (
+-                <motion.div
+-                  key={id}
+-                  initial={{ opacity: 0, x: -24 }}
+-                  animate={{ opacity: 1, x: 0 }}
+-                  transition={{ delay: 0.06 * i }}
++      {/* Rendered outside <header>: the header's backdrop-filter would otherwise become the
++          containing block of this fixed overlay and shrink it to the header's height. */}
++        <AnimatePresence>
++          {open && (
++            <motion.div
++              initial={{ opacity: 0 }}
++              animate={{ opacity: 1 }}
++              exit={{ opacity: 0 }}
++              className="fixed inset-0 z-[65] flex h-[100dvh] flex-col overflow-y-auto bg-ink-950 lg:hidden"
++            >
++              <div aria-hidden className="pointer-events-none absolute -right-24 top-1/4 h-72 w-72 animate-float-slow rounded-full bg-lime/10 blur-3xl" />
++              <div aria-hidden className="pointer-events-none absolute -left-24 bottom-10 h-72 w-72 animate-float-slow rounded-full bg-violet/15 blur-3xl" />
++              <div className="container-x relative flex h-16 shrink-0 items-center justify-between">
++                <span className="font-display font-bold">
++                  {SITE.shortName}
++                  <span className="text-lime">.dev</span>
++                </span>
++                <button
++                  className="grid h-10 w-10 place-items-center rounded-lg border border-white/10 bg-white/5"
++                  onClick={() => setOpen(false)}
++                  aria-label={t('close')}
+                 >
+-                  <Link
+-                    href={id === 'cv' ? '/cv' : `/#${id}`}
+-                    onClick={id === 'cv' ? () => setOpen(false) : goTo(id)}
+-                    className="block py-2 font-display text-3xl font-bold text-white/90 transition-colors hover:text-lime"
++                  <FiX size={18} />
++                </button>
++              </div>
++              <div className="container-x relative flex flex-1 flex-col justify-center gap-2 pb-16">
++                {[...SECTIONS, 'cv'].map((id, i) => (
++                  <motion.div
++                    key={id}
++                    initial={{ opacity: 0, x: -32, filter: 'blur(6px)' }}
++                    animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
++                    transition={{ delay: 0.08 + 0.07 * i, duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98] }}
+                   >
+-                    {t(id)}
+-                  </Link>
+-                </motion.div>
+-              ))}
+-              <div className="mt-8 flex items-center gap-4">
+-                <LocaleToggle />
+-                <a href={SITE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-muted hover:text-white">
+-                  <FaGithub size={20} />
+-                </a>
+-                <a href={SITE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted hover:text-white">
+-                  <FaLinkedinIn size={20} />
+-                </a>
++                    <Link
++                      href={id === 'cv' ? '/cv' : `/#${id}`}
++                      onClick={id === 'cv' ? () => setOpen(false) : goTo(id)}
++                      className="block py-2 font-display text-3xl font-bold text-white/90 transition-colors hover:text-lime"
++                    >
++                      {t(id)}
++                    </Link>
++                  </motion.div>
++                ))}
++                <div className="mt-8 flex items-center gap-4">
++                  <LocaleToggle />
++                  <a href={SITE.github} target="_blank" rel="noreferrer" aria-label="GitHub" className="text-muted hover:text-white">
++                    <FaGithub size={20} />
++                  </a>
++                  <a href={SITE.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn" className="text-muted hover:text-white">
++                    <FaLinkedinIn size={20} />
++                  </a>
++                </div>
+               </div>
+-            </div>
+-          </motion.div>
+-        )}
+-      </AnimatePresence>
+-    </header>
++            </motion.div>
++          )}
++        </AnimatePresence>
++    </>
+   );
+ }
+diff --git a/components/sections/Hero.jsx b/components/sections/Hero.jsx
+index 9717b45..5739b89 100644
+--- a/components/sections/Hero.jsx
++++ b/components/sections/Hero.jsx
+@@ -5,6 +5,13 @@ import { useTranslations } from 'next-intl';
+ import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
+ import { FiArrowDown, FiArrowUpRight } from 'react-icons/fi';
+ 
++const FLOATING_CHIPS = [
++  { label: 'TypeScript', pos: 'left-[52%] top-[8.5rem]', delay: '-3s', dot: 'bg-violet' },
++  { label: 'React', pos: 'right-4 top-[13rem]', delay: '0s', dot: 'bg-lime' },
++  { label: 'Next.js', pos: 'right-3 top-[19rem]', delay: '-2s', dot: 'bg-violet' },
++  { label: 'Three.js', pos: 'right-8 top-[25rem]', delay: '-4s', dot: 'bg-lime' },
++];
++
+ const HeroScene = dynamic(() => import('../three/HeroScene'), {
+   ssr: false,
+   loading: () => (
+@@ -33,10 +40,29 @@ export default function Hero() {
+ 
+   return (
+     <section ref={ref} className="relative flex min-h-screen items-center overflow-hidden pt-24">
+-      <div className="absolute inset-y-0 right-0 h-full w-full opacity-50 lg:w-[58%] lg:opacity-100">
++      <div className="absolute inset-y-0 right-0 h-full w-full opacity-50 max-md:h-[68%] max-md:opacity-80 lg:w-[58%] lg:opacity-100">
+         <HeroScene />
+       </div>
+-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/70 to-transparent lg:via-ink-950/30" />
++      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-ink-950 via-ink-950/70 to-transparent max-md:bg-gradient-to-b max-md:from-ink-950/10 max-md:via-ink-950/55 max-md:to-ink-950 lg:via-ink-950/30" />
++
++      {/* Mobile-only decoration: glowing orbs + floating tech chips */}
++      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden md:hidden">
++        <span className="absolute -left-20 top-[28%] h-56 w-56 animate-float-slow rounded-full bg-lime/20 blur-3xl" />
++        <span
++          className="absolute -right-16 bottom-[18%] h-64 w-64 animate-float-slow rounded-full bg-violet/25 blur-3xl"
++          style={{ animationDelay: '-4s' }}
++        />
++        {FLOATING_CHIPS.map((c) => (
++          <span
++            key={c.label}
++            className={`glass absolute ${c.pos} animate-float inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] text-white/80`}
++            style={{ animationDelay: c.delay }}
++          >
++            <span className={`h-1.5 w-1.5 rounded-full ${c.dot}`} />
++            {c.label}
++          </span>
++        ))}
++      </div>
+ 
+       <motion.div style={{ y, opacity }} className="container-x relative z-10">
+         <div className="max-w-2xl">
+@@ -68,9 +94,15 @@ export default function Hero() {
+             transition={{ delay: 0.25, duration: 0.7 }}
+             className="mt-3 font-display text-5xl font-bold leading-[1.04] tracking-tight sm:text-6xl md:text-7xl"
+           >
+-            {t('titleA')}
++            <span className="max-md:inline-block max-md:animate-blur-in" style={{ animationDelay: '0.3s' }}>
++              {t('titleA')}
++            </span>
+             <br />
+-            <span className="text-gradient">{t('titleB')}</span>
++            <span className="max-md:inline-block max-md:animate-blur-in" style={{ animationDelay: '0.5s' }}>
++              <span className="text-gradient max-md:animate-gradient-pan max-md:[background-size:200%_auto]">
++                {t('titleB')}
++              </span>
++            </span>
+           </motion.h1>
+ 
+           <motion.div
+@@ -109,14 +141,14 @@ export default function Hero() {
+           >
+             <Link
+               href="/#projects"
+-              className="group inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-display text-sm font-semibold text-ink-950 transition-shadow hover:shadow-glow"
++              className="group inline-flex items-center gap-2 rounded-full bg-lime px-7 py-3.5 font-display text-sm font-semibold text-ink-950 transition-[box-shadow,transform] hover:shadow-glow max-md:animate-glow-pulse max-md:active:scale-95"
+             >
+               {t('ctaProjects')}
+               <FiArrowUpRight className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+             </Link>
+             <Link
+               href="/#contact"
+-              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 font-display text-sm font-semibold text-white transition-colors hover:border-lime/50 hover:text-lime"
++              className="inline-flex items-center gap-2 rounded-full border border-white/15 px-7 py-3.5 font-display text-sm font-semibold text-white transition-[color,border-color,transform] hover:border-lime/50 hover:text-lime max-md:active:scale-95"
+             >
+               {t('ctaContact')}
+             </Link>
+@@ -128,8 +160,12 @@ export default function Hero() {
+             transition={{ delay: 0.75, duration: 0.7 }}
+             className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/10 pt-6"
+           >
+-            {stats.map((s) => (
+-              <div key={s.label}>
++            {stats.map((s, i) => (
++              <div
++                key={s.label}
++                className="max-md:animate-pop-in"
++                style={{ animationDelay: `${0.9 + i * 0.15}s` }}
++              >
+                 <p className="font-display text-3xl font-bold text-lime">{s.value}</p>
+                 <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-muted">{s.label}</p>
+               </div>
+diff --git a/components/sections/Marquee.jsx b/components/sections/Marquee.jsx
+index f9b034a..d6093f1 100644
+--- a/components/sections/Marquee.jsx
++++ b/components/sections/Marquee.jsx
+@@ -5,7 +5,7 @@ export default function Marquee() {
+   const items = t.raw('items');
+   return (
+     <div className="relative z-10 overflow-hidden border-y border-white/5 bg-ink-900/70 py-5">
+-      <div className="marquee-track flex items-center gap-12">
++      <div className="marquee-track flex items-center gap-12 max-md:[animation-duration:22s]">
+         {[0, 1].map((copy) => (
+           <div key={copy} aria-hidden={copy === 1} className="flex items-center gap-12">
+             {items.map((item) => (
+diff --git a/components/sections/Projects.jsx b/components/sections/Projects.jsx
+index 0761fd8..2487d99 100644
+--- a/components/sections/Projects.jsx
++++ b/components/sections/Projects.jsx
+@@ -21,7 +21,7 @@ export default function Projects() {
+           >
+             <Link
+               href={`/projects/${project.slug}`}
+-              className="group block overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition-colors duration-300 hover:border-lime/40"
++              className="group block overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition duration-300 hover:border-lime/40 max-md:active:scale-[0.98]"
+             >
+               <div className={`relative overflow-hidden ${i === 0 ? 'aspect-[21/9]' : 'aspect-[16/9]'}`}>
+                 <Image
+@@ -54,7 +54,7 @@ export default function Projects() {
+                     <Chip key={tag}>{tag}</Chip>
+                   ))}
+                 </div>
+-                <p className="mt-4 font-mono text-xs text-lime opacity-0 transition-opacity group-hover:opacity-100">
++                <p className="mt-4 font-mono text-xs text-lime opacity-0 transition-opacity group-hover:opacity-100 max-md:opacity-100">
+                   {t('viewCase')} →
+                 </p>
+               </div>
+diff --git a/components/three/HeroScene.jsx b/components/three/HeroScene.jsx
+index 2e19b19..f401b97 100644
+--- a/components/three/HeroScene.jsx
++++ b/components/three/HeroScene.jsx
+@@ -7,6 +7,17 @@ function Sculpture({ reduced }) {
+   const group = useRef();
+   const shell = useRef();
+   const scroll = useRef(0);
++  const mobile = useRef(false);
++
++  useEffect(() => {
++    const mq = window.matchMedia('(max-width: 767px)');
++    const sync = () => {
++      mobile.current = mq.matches;
++    };
++    sync();
++    mq.addEventListener('change', sync);
++    return () => mq.removeEventListener('change', sync);
++  }, []);
+ 
+   useEffect(() => {
+     const onScroll = () => {
+@@ -21,11 +32,16 @@ function Sculpture({ reduced }) {
+   useFrame((state, delta) => {
+     if (!group.current) return;
+     const t = state.clock.elapsedTime;
++    const isMobile = mobile.current;
+     if (!reduced) {
+-      group.current.rotation.y += delta * 0.12;
+-      shell.current.rotation.z -= delta * 0.05;
++      // phones: spin faster and breathe so the hero feels alive
++      group.current.rotation.y += delta * (isMobile ? 0.32 : 0.12);
++      shell.current.rotation.z -= delta * (isMobile ? 0.14 : 0.05);
+       group.current.position.y = Math.sin(t * 0.6) * 0.12;
+     }
++    // phones have a narrow canvas: shrink the sculpture so the rings aren't cropped
++    const targetScale = isMobile ? 0.62 + (reduced ? 0 : Math.sin(t * 1.4) * 0.025) : 1;
++    group.current.scale.setScalar(MathUtils.lerp(group.current.scale.x, targetScale, 0.1));
+     const targetX = state.pointer.y * 0.25 + scroll.current * 0.9;
+     group.current.rotation.x = MathUtils.lerp(group.current.rotation.x, targetX, 0.06);
+     group.current.rotation.z = MathUtils.lerp(group.current.rotation.z, state.pointer.x * 0.12, 0.06);
+diff --git a/pages/_document.js b/pages/_document.js
+index d814601..a496e5b 100644
+--- a/pages/_document.js
++++ b/pages/_document.js
+@@ -24,17 +24,32 @@ export default class MyDocument extends Document {
+         <body>
+           <Main />
+           <NextScript />
+-          {/* Register the service worker early so PWA auditors detect it. */}
++          {/*
++            Service worker: production only. In `next dev` the SW used to cache-first the
++            un-hashed /_next/static/* chunks, so after any edit the page loaded stale chunks and
++            threw odd hydration / ChunkLoad errors until a reload. In dev we now remove any
++            previously registered SW and its caches (one-time reload if it controlled the page).
++          */}
+           <script
+             dangerouslySetInnerHTML={{
+               __html:
+-                "if('serviceWorker' in navigator){" +
+-                "window.addEventListener('load',function(){" +
+-                "navigator.serviceWorker.register('/sw.js').catch(function(e){" +
+-                "console.warn('SW registration failed:',e)" +
+-                "})" +
+-                "})" +
+-                "}",
++                process.env.NODE_ENV === 'production'
++                  ? "if('serviceWorker' in navigator){" +
++                    "window.addEventListener('load',function(){" +
++                    "navigator.serviceWorker.register('/sw.js').catch(function(e){" +
++                    "console.warn('SW registration failed:',e)" +
++                    "})" +
++                    "})" +
++                    "}"
++                  : "if('serviceWorker' in navigator){" +
++                    "var had=!!navigator.serviceWorker.controller;" +
++                    "navigator.serviceWorker.getRegistrations()" +
++                    ".then(function(r){return Promise.all(r.map(function(x){return x.unregister()}))})" +
++                    ".then(function(){return window.caches?caches.keys():[]})" +
++                    ".then(function(k){return Promise.all(k.map(function(x){return caches.delete(x)}))})" +
++                    ".then(function(){if(had&&!sessionStorage.getItem('sw-cleaned')){sessionStorage.setItem('sw-cleaned','1');location.reload()}})" +
++                    ".catch(function(){})" +
++                    "}",
+             }}
+           />
+         </body>
+diff --git a/public/sw.js b/public/sw.js
+index 63c852f..6ab1041 100644
+--- a/public/sw.js
++++ b/public/sw.js
+@@ -11,7 +11,7 @@
+  * Bump CACHE_VERSION whenever you ship a breaking SW change; the activate
+  * step will delete old caches.
+  */
+-const CACHE_VERSION = 'v2';
++const CACHE_VERSION = 'v3';
+ const STATIC_CACHE = `amin-static-${CACHE_VERSION}`;
+ const PAGE_CACHE = `amin-pages-${CACHE_VERSION}`;
+ 
+@@ -76,6 +76,17 @@ self.addEventListener('fetch', (event) => {
+   const url = new URL(request.url);
+   if (url.origin !== self.location.origin) return;
+ 
++  // Never touch dev/HMR traffic or Next data requests (stale JSON / chunks break hydration).
++  if (
++    url.pathname.startsWith('/_next/data') ||
++    url.pathname.includes('webpack-hmr') ||
++    url.pathname.includes('hot-update') ||
++    url.pathname.startsWith('/_next/static/development') ||
++    url.pathname.startsWith('/__nextjs')
++  ) {
++    return;
++  }
++
+   // 1) Navigations -> network-first.
+   if (isHtmlRequest(request)) {
+     event.respondWith(
+diff --git a/styles/globals.css b/styles/globals.css
+index 15b26ff..4200038 100644
+--- a/styles/globals.css
++++ b/styles/globals.css
+@@ -13,6 +13,7 @@
+ }
+ 
+ html {
++  position: relative; /* framer-motion useScroll warns when its scroll container is static */
+   scroll-behavior: smooth;
+ }
+ 
+@@ -111,6 +112,7 @@ body {
+   *::before,
+   *::after {
+     animation-duration: 0.01ms !important;
++    animation-iteration-count: 1 !important;
+     transition-duration: 0.01ms !important;
+   }
+ }
+diff --git a/tailwind.config.js b/tailwind.config.js
+index ba6870e..1946c3c 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -24,9 +24,39 @@ module.exports = {
+           from: { transform: 'translateX(0)' },
+           to: { transform: 'translateX(-50%)' },
+         },
++        float: {
++          '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
++          '50%': { transform: 'translateY(-14px) rotate(2deg)' },
++        },
++        'float-slow': {
++          '0%, 100%': { transform: 'translate3d(0, 0, 0) scale(1)' },
++          '50%': { transform: 'translate3d(14px, -22px, 0) scale(1.12)' },
++        },
++        'gradient-pan': {
++          '0%, 100%': { backgroundPosition: '0% 50%' },
++          '50%': { backgroundPosition: '100% 50%' },
++        },
++        'glow-pulse': {
++          '0%': { boxShadow: '0 0 0 0 rgba(191, 255, 60, 0.45)' },
++          '70%, 100%': { boxShadow: '0 0 0 16px rgba(191, 255, 60, 0)' },
++        },
++        'blur-in': {
++          from: { opacity: '0', filter: 'blur(12px)', transform: 'translateY(18px)' },
++          to: { opacity: '1', filter: 'blur(0)', transform: 'translateY(0)' },
++        },
++        'pop-in': {
++          from: { opacity: '0', transform: 'scale(0.7) translateY(10px)' },
++          to: { opacity: '1', transform: 'scale(1) translateY(0)' },
++        },
+       },
+       animation: {
+         marquee: 'marquee 36s linear infinite',
++        float: 'float 6s ease-in-out infinite',
++        'float-slow': 'float-slow 9s ease-in-out infinite',
++        'gradient-pan': 'gradient-pan 5s ease-in-out infinite',
++        'glow-pulse': 'glow-pulse 2.2s ease-out infinite',
++        'blur-in': 'blur-in 0.9s cubic-bezier(0.21, 0.47, 0.32, 0.98) both',
++        'pop-in': 'pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both',
+       },
+     },
+   },

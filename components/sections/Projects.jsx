@@ -21,7 +21,7 @@ export default function Projects() {
           >
             <Link
               href={`/projects/${project.slug}`}
-              className="group block overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition-colors duration-300 hover:border-lime/40"
+              className="group block overflow-hidden rounded-2xl border border-white/10 bg-ink-900/70 transition duration-300 hover:border-lime/40 max-md:active:scale-[0.98]"
             >
               <div className={`relative overflow-hidden ${i === 0 ? 'aspect-[21/9]' : 'aspect-[16/9]'}`}>
                 <Image
@@ -54,7 +54,7 @@ export default function Projects() {
                     <Chip key={tag}>{tag}</Chip>
                   ))}
                 </div>
-                <p className="mt-4 font-mono text-xs text-lime opacity-0 transition-opacity group-hover:opacity-100">
+                <p className="mt-4 font-mono text-xs text-lime opacity-0 transition-opacity group-hover:opacity-100 max-md:opacity-100">
                   {t('viewCase')} →
                 </p>
               </div>

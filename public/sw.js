@@ -11,7 +11,7 @@
  * Bump CACHE_VERSION whenever you ship a breaking SW change; the activate
  * step will delete old caches.
  */
-const CACHE_VERSION = 'v2';
+const CACHE_VERSION = 'v3';
 const STATIC_CACHE = `amin-static-${CACHE_VERSION}`;
 const PAGE_CACHE = `amin-pages-${CACHE_VERSION}`;
 
@@ -75,6 +75,17 @@ self.addEventListener('fetch', (event) => {
   // Don't try to handle cross-origin requests (e.g. Google Fonts) here.
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
+
+  // Never touch dev/HMR traffic or Next data requests (stale JSON / chunks break hydration).
+  if (
+    url.pathname.startsWith('/_next/data') ||
+    url.pathname.includes('webpack-hmr') ||
+    url.pathname.includes('hot-update') ||
+    url.pathname.startsWith('/_next/static/development') ||
+    url.pathname.startsWith('/__nextjs')
+  ) {
+    return;
+  }
 
   // 1) Navigations -> network-first.
   if (isHtmlRequest(request)) {

@@ -7,6 +7,17 @@ function Sculpture({ reduced }) {
   const group = useRef();
   const shell = useRef();
   const scroll = useRef(0);
+  const mobile = useRef(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const sync = () => {
+      mobile.current = mq.matches;
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -21,11 +32,16 @@ function Sculpture({ reduced }) {
   useFrame((state, delta) => {
     if (!group.current) return;
     const t = state.clock.elapsedTime;
+    const isMobile = mobile.current;
     if (!reduced) {
-      group.current.rotation.y += delta * 0.12;
-      shell.current.rotation.z -= delta * 0.05;
+      // phones: spin faster and breathe so the hero feels alive
+      group.current.rotation.y += delta * (isMobile ? 0.32 : 0.12);
+      shell.current.rotation.z -= delta * (isMobile ? 0.14 : 0.05);
       group.current.position.y = Math.sin(t * 0.6) * 0.12;
     }
+    // phones have a narrow canvas: shrink the sculpture so the rings aren't cropped
+    const targetScale = isMobile ? 0.62 + (reduced ? 0 : Math.sin(t * 1.4) * 0.025) : 1;
+    group.current.scale.setScalar(MathUtils.lerp(group.current.scale.x, targetScale, 0.1));
     const targetX = state.pointer.y * 0.25 + scroll.current * 0.9;
     group.current.rotation.x = MathUtils.lerp(group.current.rotation.x, targetX, 0.06);
     group.current.rotation.z = MathUtils.lerp(group.current.rotation.z, state.pointer.x * 0.12, 0.06);

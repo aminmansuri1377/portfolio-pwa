@@ -13,6 +13,7 @@
 }
 
 html {
+  position: relative; /* framer-motion useScroll warns when its scroll container is static */
   scroll-behavior: smooth;
 }
 
@@ -111,6 +112,7 @@ body {
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
 }
