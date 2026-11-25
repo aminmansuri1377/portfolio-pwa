@@ -162,6 +162,7 @@ const INITIAL_TASKS = [
 
 function Relay({ t }) {
   const [tasks, setTasks] = useState(INITIAL_TASKS);
+  const [mobileStatus, setMobileStatus] = useState('todo');
   const [title, setTitle] = useState('');
   const [priority, setPriority] = useState('normal');
   const [filter, setFilter] = useState('all');
@@ -184,8 +185,18 @@ function Relay({ t }) {
     setTasks((current) => [...current, { id, title: title.trim(), status: 'todo', priority, tag: 'STUDIO' }]);
     setNotice(`${title.trim()} · ${t.todo}`); setTitle(''); setFilter('all');
   };
-  return <div className={`${styles.demo} ${styles.relay}`}>
+  return <div className={`${styles.demo} ${styles.relay}`} data-mobile-status={mobileStatus}>
     <DemoHeader brand="relay" icon={FiZap} tag={t.relayTag} title={t.relayTitle} description={t.relayDesc} t={t} />
+    <div className={styles.mobileBoardTabs} role="tablist" aria-label={t.board}>
+      {['todo', 'doing', 'done'].map((status) => (
+        <button key={status} type="button" role="tab" aria-selected={mobileStatus === status}
+          className={mobileStatus === status ? styles.activeBoardTab : ''}
+          onClick={() => setMobileStatus(status)}>
+          {t[status]}
+          <span>{tasks.filter((task) => task.status === status && (filter === 'all' || task.priority === filter)).length}</span>
+        </button>
+      ))}
+    </div>
     <div className={styles.boardToolbar}><div className={styles.boardTitle}><FiGrid aria-hidden /><h4>{t.board}</h4><span>{tasks.length} {t.tasks}</span></div><div className={styles.boardActions}><label className={styles.selectWrap}><select aria-label={t.filterPriority} value={filter} onChange={(event) => setFilter(event.target.value)}><option value="all">{t.allPriorities}</option>{['high', 'normal', 'low'].map((value) => <option key={value} value={value}>{t[value]}</option>)}</select><FiChevronDown aria-hidden /></label><button className={styles.resetButton} type="button" onClick={() => { setTasks(INITIAL_TASKS); setFilter('all'); setTitle(''); setPriority('normal'); setDragged(null); setOver(null); nextId.current = 7; setNotice(t.reset); }}><FiRefreshCw aria-hidden /><span>{t.reset}</span></button></div></div>
     <div className={styles.board}>{['todo', 'doing', 'done'].map((status) => { const columnTasks = tasks.filter((task) => task.status === status && (filter === 'all' || task.priority === filter)); return <section className={`${styles.column} ${styles[status]} ${over === status ? styles.dragOver : ''}`} key={status} aria-label={t[status]} onDragOver={(event) => { if (dragged) { event.preventDefault(); event.dataTransfer.dropEffect = 'move'; setOver(status); } }} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setOver(null); }} onDrop={(event) => { event.preventDefault(); if (dragged && event.dataTransfer.getData('text/plain') === dragged) move(dragged, status); }}><div className={styles.columnHeading}><span className={styles.columnDot} /><h5>{t[status]}</h5><span className={styles.columnCount}>{columnTasks.length}</span><FiMoreHorizontal aria-hidden /></div><div className={styles.taskList}>{columnTasks.length ? columnTasks.map((task) => <article key={task.id} className={`${styles.task} ${dragged === task.id ? styles.dragging : ''}`} draggable onDragStart={(event) => { event.dataTransfer.setData('text/plain', task.id); event.dataTransfer.effectAllowed = 'move'; setDragged(task.id); }} onDragEnd={() => { setDragged(null); setOver(null); }}><div className={styles.taskTop}><span className={`${styles.priorityTag} ${styles[task.priority]}`}>{t[task.priority]}</span><button type="button" onClick={() => { setTasks((current) => current.filter((item) => item.id !== task.id)); setNotice(`${t.removeTask}: ${name(task)}`); }} aria-label={`${t.removeTask}: ${name(task)}`}><FiTrash2 aria-hidden /></button></div><h6>{name(task)}</h6><div className={styles.taskVisual} aria-hidden>{task.copy === 1 ? <span className={styles.motionWaves}><i /><i /><i /></span> : task.copy === 2 ? <span className={styles.cardSketch}><i /><i /><i /></span> : task.copy === 4 ? <span className={styles.tokenSketch}><i /><i /><i /><i /></span> : null}</div><div className={styles.taskBottom}><span>{task.tag}</span><span className={styles.taskAvatar}>AM</span></div><label className={`${styles.selectWrap} ${styles.taskMove}`}><select value={task.status} aria-label={`${t.move}: ${name(task)}`} onChange={(event) => move(task.id, event.target.value)}>{['todo', 'doing', 'done'].map((value) => <option key={value} value={value}>{t[value]}</option>)}</select><FiChevronDown aria-hidden /></label></article>) : <p className={styles.emptyColumn}><FiPlus aria-hidden />{t.emptyColumn}</p>}</div></section>; })}</div>
     <form className={styles.newTask} onSubmit={add}><label htmlFor={titleId} className={styles.srOnly}>{t.taskTitle}</label><FiPlus aria-hidden /><input id={titleId} value={title} maxLength={60} onChange={(event) => setTitle(event.target.value)} placeholder={t.taskTitle} /><label className={styles.selectWrap}><select aria-label={t.priority} value={priority} onChange={(event) => setPriority(event.target.value)}>{['high', 'normal', 'low'].map((value) => <option key={value} value={value}>{t[value]}</option>)}</select><FiChevronDown aria-hidden /></label><button type="submit" disabled={!title.trim() || tasks.length >= 30}>{t.addTask}</button></form>

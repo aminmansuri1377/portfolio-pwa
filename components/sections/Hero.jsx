@@ -192,6 +192,16 @@ export default function Hero() {
             >
               {t("ctaContact")}
             </Link>
+            <Link
+              href="/lab"
+              prefetch={false}
+              aria-label="Explore Visual Lab"
+              className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-lime/50 bg-lime/10 px-5 py-3 font-display text-sm font-bold text-lime shadow-[0_0_24px_rgba(191,255,60,0.12)] transition-colors hover:border-lime hover:bg-lime/20 active:scale-95 md:hidden"
+            >
+              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-lime shadow-[0_0_12px_rgba(191,255,60,0.9)]" />
+              Visual Lab
+              <FiArrowUpRight aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
           </motion.div>
 
           <motion.div

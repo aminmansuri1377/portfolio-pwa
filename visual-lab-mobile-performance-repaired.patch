@@ -1,0 +1,58 @@
+diff --git a/components/sections/Hero.jsx b/components/sections/Hero.jsx
+--- a/components/sections/Hero.jsx
++++ b/components/sections/Hero.jsx
+@@ -194,2 +194,12 @@
++            </Link>
++            <Link
++              href="/lab"
++              prefetch={false}
++              aria-label="Explore Visual Lab"
++              className="group inline-flex min-h-11 items-center gap-2 rounded-full border border-lime/50 bg-lime/10 px-5 py-3 font-display text-sm font-bold text-lime shadow-[0_0_24px_rgba(191,255,60,0.12)] transition-colors hover:border-lime hover:bg-lime/20 active:scale-95 md:hidden"
++            >
++              <span aria-hidden="true" className="h-2 w-2 rounded-full bg-lime shadow-[0_0_12px_rgba(191,255,60,0.9)]" />
++              Visual Lab
++              <FiArrowUpRight aria-hidden="true" className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+             </Link>
+           </motion.div>
+diff --git a/components/lab/interfaces/InterfaceDemo.jsx b/components/lab/interfaces/InterfaceDemo.jsx
+--- a/components/lab/interfaces/InterfaceDemo.jsx
++++ b/components/lab/interfaces/InterfaceDemo.jsx
+@@ -164,2 +164,3 @@
+   const [tasks, setTasks] = useState(INITIAL_TASKS);
++  const [mobileStatus, setMobileStatus] = useState('todo');
+   const [title, setTitle] = useState('');
+@@ -187,3 +188,13 @@
+-  return <div className={`${styles.demo} ${styles.relay}`}>
++  return <div className={`${styles.demo} ${styles.relay}`} data-mobile-status={mobileStatus}>
+     <DemoHeader brand="relay" icon={FiZap} tag={t.relayTag} title={t.relayTitle} description={t.relayDesc} t={t} />
++    <div className={styles.mobileBoardTabs} role="tablist" aria-label={t.board}>
++      {['todo', 'doing', 'done'].map((status) => (
++        <button key={status} type="button" role="tab" aria-selected={mobileStatus === status}
++          className={mobileStatus === status ? styles.activeBoardTab : ''}
++          onClick={() => setMobileStatus(status)}>
++          {t[status]}
++          <span>{tasks.filter((task) => task.status === status && (filter === 'all' || task.priority === filter)).length}</span>
++        </button>
++      ))}
++    </div>
+     <div className={styles.boardToolbar}><div className={styles.boardTitle}><FiGrid aria-hidden /><h4>{t.board}</h4><span>{tasks.length} {t.tasks}</span></div><div className={styles.boardActions}><label className={styles.selectWrap}><select aria-label={t.filterPriority} value={filter} onChange={(event) => setFilter(event.target.value)}><option value="all">{t.allPriorities}</option>{['high', 'normal', 'low'].map((value) => <option key={value} value={value}>{t[value]}</option>)}</select><FiChevronDown aria-hidden /></label><button className={styles.resetButton} type="button" onClick={() => { setTasks(INITIAL_TASKS); setFilter('all'); setTitle(''); setPriority('normal'); setDragged(null); setOver(null); nextId.current = 7; setNotice(t.reset); }}><FiRefreshCw aria-hidden /><span>{t.reset}</span></button></div></div>
+diff --git a/styles/lab-interfaces.module.css b/styles/lab-interfaces.module.css
+--- a/styles/lab-interfaces.module.css
++++ b/styles/lab-interfaces.module.css
+@@ -177,2 +177,16 @@
+ .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 21px; }
++/* Mobile Relay board: show one selected status, not three stacked columns. */
++.mobileBoardTabs { display: none; }
++@media (max-width: 760px) {
++  .mobileBoardTabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 16px; padding: 5px; border: 1px solid #65557655; border-radius: 12px; background: #171320; }
++  .mobileBoardTabs button { display: flex; justify-content: center; align-items: center; gap: 5px; min-width: 0; min-height: 44px; padding: 8px 4px; border: 1px solid transparent; border-radius: 8px; color: #bcb2ce; font-size: clamp(11px, 3vw, 13px); font-weight: 600; transition: background-color .2s, color .2s; }
++  .mobileBoardTabs button span { display: grid; place-items: center; min-width: 19px; height: 19px; padding: 0 3px; border-radius: 6px; background: #ffffff12; font: 11px var(--font-mono), monospace; }
++  .mobileBoardTabs button.activeBoardTab { background: #bda1e8; color: #21172d; }
++  .mobileBoardTabs button.activeBoardTab span { background: #21172d20; }
++  .mobileBoardTabs button:focus-visible { outline: 2px solid #d7bdff; outline-offset: 2px; }
++  .relay[data-mobile-status="todo"] .board .column:not(.todo),
++  .relay[data-mobile-status="doing"] .board .column:not(.doing),
++  .relay[data-mobile-status="done"] .board .column:not(.done) { display: none; }
++  .relay .board .taskList { grid-template-columns: minmax(0, 1fr); }
++}
+ .column { --column: #9a91a8; padding: 12px 10px 14px; background: #18151f; border: 1px solid #ffffff04; border-radius: 9px; min-width: 0; transition: background .2s, border-color .2s; }

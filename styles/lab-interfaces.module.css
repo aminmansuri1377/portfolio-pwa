@@ -175,6 +175,20 @@
 .resetButton:hover { background: #b080ff0c; color: #d2b9f7; }
 .resetButton svg { width: 13px; }
 .board { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 21px; }
+/* Mobile Relay board: show one selected status, not three stacked columns. */
+.mobileBoardTabs { display: none; }
+@media (max-width: 760px) {
+  .mobileBoardTabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin-top: 16px; padding: 5px; border: 1px solid #65557655; border-radius: 12px; background: #171320; }
+  .mobileBoardTabs button { display: flex; justify-content: center; align-items: center; gap: 5px; min-width: 0; min-height: 44px; padding: 8px 4px; border: 1px solid transparent; border-radius: 8px; color: #bcb2ce; font-size: clamp(11px, 3vw, 13px); font-weight: 600; transition: background-color .2s, color .2s; }
+  .mobileBoardTabs button span { display: grid; place-items: center; min-width: 19px; height: 19px; padding: 0 3px; border-radius: 6px; background: #ffffff12; font: 11px var(--font-mono), monospace; }
+  .mobileBoardTabs button.activeBoardTab { background: #bda1e8; color: #21172d; }
+  .mobileBoardTabs button.activeBoardTab span { background: #21172d20; }
+  .mobileBoardTabs button:focus-visible { outline: 2px solid #d7bdff; outline-offset: 2px; }
+  .relay[data-mobile-status="todo"] .board .column:not(.todo),
+  .relay[data-mobile-status="doing"] .board .column:not(.doing),
+  .relay[data-mobile-status="done"] .board .column:not(.done) { display: none; }
+  .relay .board .taskList { grid-template-columns: minmax(0, 1fr); }
+}
 .column { --column: #9a91a8; padding: 12px 10px 14px; background: #18151f; border: 1px solid #ffffff04; border-radius: 9px; min-width: 0; transition: background .2s, border-color .2s; }
 .doing { --column: #c5a3ff; }
 .done { --column: #b3dc94; }
