@@ -134,6 +134,17 @@ export default function Navbar() {
             >
               {t('cv')}
             </Link>
+            <Link
+              href="/lab"
+              prefetch={false}
+              aria-current={router.pathname === '/lab' ? 'page' : undefined}
+              className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1 text-sm transition-colors hover:text-white ${
+                router.pathname === '/lab' ? 'border-lime/60 text-lime' : 'border-white/10 text-muted hover:border-lime/40'
+              }`}
+            >
+              <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-lime motion-safe:animate-pulse" />
+              Visual Lab
+            </Link>
           </div>
 
           <div className="flex items-center gap-3">
@@ -175,7 +186,7 @@ export default function Navbar() {
                 </button>
               </div>
               <div className="container-x relative flex flex-1 flex-col justify-center gap-2 pb-16">
-                {[...SECTIONS, 'cv'].map((id, i) => (
+                {[...SECTIONS, 'cv', 'lab'].map((id, i) => (
                   <motion.div
                     key={id}
                     initial={{ opacity: 0, x: -32, filter: 'blur(6px)' }}
@@ -183,11 +194,12 @@ export default function Navbar() {
                     transition={{ delay: 0.08 + 0.07 * i, duration: 0.45, ease: [0.21, 0.47, 0.32, 0.98] }}
                   >
                     <Link
-                      href={id === 'cv' ? '/cv' : `/#${id}`}
-                      onClick={id === 'cv' ? () => setOpen(false) : goTo(id)}
+                      href={id === 'lab' ? '/lab' : id === 'cv' ? '/cv' : `/#${id}`}
+                      prefetch={id === 'lab' ? false : undefined}
+                      onClick={id === 'cv' || id === 'lab' ? () => setOpen(false) : goTo(id)}
                       className="block py-2 font-display text-3xl font-bold text-white/90 transition-colors hover:text-lime"
                     >
-                      {t(id)}
+                      {id === 'lab' ? 'Visual Lab' : t(id)}
                     </Link>
                   </motion.div>
                 ))}

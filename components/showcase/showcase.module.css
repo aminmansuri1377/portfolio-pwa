@@ -1,0 +1,120 @@
+/* Visual Lab — animated card art, CSS 3D cube for the homepage teaser. */
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes spinRev { to { transform: rotate(-360deg); } }
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(18px, -14px, 0) scale(1.15); }
+}
+@keyframes wave {
+  0%, 100% { transform: scaleY(0.25); opacity: 0.45; }
+  50% { transform: scaleY(1); opacity: 1; }
+}
+@keyframes bounce {
+  0%, 100% { transform: translateY(-26px); }
+  50% { transform: translateY(26px); }
+}
+@keyframes dash { to { stroke-dashoffset: -240; } }
+@keyframes pulse {
+  0%, 100% { transform: scale(0.92); opacity: 0.6; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes cube {
+  from { transform: rotateX(-24deg) rotateY(0deg); }
+  to { transform: rotateX(-24deg) rotateY(360deg); }
+}
+@keyframes cubeRev {
+  from { transform: rotateX(30deg) rotateY(360deg); }
+  to { transform: rotateX(30deg) rotateY(0deg); }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.spin { animation: spin 24s linear infinite; }
+.spinFast { animation: spin 7s linear infinite; }
+.spinRev { animation: spinRev 16s linear infinite; }
+.drift { animation: drift 8s ease-in-out infinite; }
+.wave { transform-origin: bottom; animation: wave 2.2s ease-in-out infinite; }
+.bounce { animation: bounce 2.4s ease-in-out infinite; }
+.dash { stroke-dasharray: 120 120; animation: dash 5s linear infinite; }
+.pulse { animation: pulse 3s ease-in-out infinite; }
+.bob { animation: bob 5s ease-in-out infinite; }
+
+/* ---- 3D cube (homepage teaser) ---- */
+.scene { perspective: 900px; }
+.cube {
+  --s: 62px;
+  position: relative;
+  width: calc(var(--s) * 2);
+  height: calc(var(--s) * 2);
+  transform-style: preserve-3d;
+  animation: cube 16s linear infinite;
+}
+.core {
+  --s: 28px;
+  position: absolute;
+  left: calc(50% - var(--s));
+  top: calc(50% - var(--s));
+  width: calc(var(--s) * 2);
+  height: calc(var(--s) * 2);
+  transform-style: preserve-3d;
+  animation: cubeRev 9s linear infinite;
+}
+.face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(191, 255, 60, 0.6);
+  background: linear-gradient(135deg, rgba(191, 255, 60, 0.1), rgba(139, 124, 255, 0.16));
+}
+.coreFace {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(139, 124, 255, 0.9);
+  background: rgba(139, 124, 255, 0.28);
+}
+.f1 { transform: translateZ(var(--s)); }
+.f2 { transform: rotateY(90deg) translateZ(var(--s)); }
+.f3 { transform: rotateY(180deg) translateZ(var(--s)); }
+.f4 { transform: rotateY(-90deg) translateZ(var(--s)); }
+.f5 { transform: rotateX(90deg) translateZ(var(--s)); }
+.f6 { transform: rotateX(-90deg) translateZ(var(--s)); }
+
+.ring {
+  position: absolute;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* animated gradient frame around the teaser panel */
+.frame {
+  background: conic-gradient(from 0deg, rgba(191, 255, 60, 0.7), rgba(139, 124, 255, 0.7), rgba(191, 255, 60, 0.05), rgba(191, 255, 60, 0.7));
+}
+.frameSpin { animation: spin 10s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .spin, .spinFast, .spinRev, .drift, .wave, .bounce, .dash, .pulse, .bob, .cube, .core, .frameSpin {
+    animation: none;
+  }
+}
+
+/* A fixed stage gives the imported canvases a real size inside the native dialog. */
+.experiment { position: relative; width: 100%; height: min(740px,78vh); min-height: 600px; border: 1px solid #ffffff14; border-radius: 13px; overflow: hidden; background: #060609; color: #f4f4f0; }
+.experiment button:focus-visible,.experiment input:focus-visible { outline: 2px solid #bfff3c; outline-offset: 3px; }
+.experiment button:disabled { cursor: default; opacity: .55; }
+.experiment [data-lenis-prevent] { overscroll-behavior: contain; }
+.experiment [data-paused=true] * { animation-play-state: paused !important; }
+.graphicsFallback { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 25px; background: radial-gradient(ellipse at 50% 20%,#171025,#060609 75%); }
+.fallbackArt { width: min(100%,550px); height: 280px; flex-shrink: 1; }
+.fallbackArt * { animation-play-state: paused !important; }
+.fallbackMessage { position: relative; max-width: 480px; text-align: center; padding: 20px 0; display: grid; gap: 12px; justify-items: center; }
+.fallbackMessage p { font: 500 1.1rem var(--font-display),sans-serif; }
+.fallbackMessage span { color: #a7a6b4; font-size: .9rem; line-height: 1.8; }
+.fallbackMessage button,.loadState button { min-height: 44px; padding: 10px 19px; border: 1px solid #bfff3c55; border-radius: 50px; color: #bfff3c; font-size: .875rem; }
+.tunnelPoster { display: block; width: 100%; height: 100%; }
+.loadState { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px; text-align: center; color: #a7a6b4; }
+.teaserRoot[data-active=false] *,.poster[data-active=false] * { animation-play-state: paused !important; }
+@keyframes frameRotate { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+.frameSpin { animation-name: frameRotate; }
+@media (max-width:520px) { .experiment { min-height: 660px; height: 78svh; border-radius: 9px; }.fallbackArt { height: 230px; }.fallbackMessage { padding-top: 10px; } }

@@ -1,0 +1,150 @@
+.frontendDemo { color: #f4f2fa; width: 100%; min-width: 0; font-size: 1rem; }
+.frontendDemo *, .frontendDemo *::before, .frontendDemo *::after { box-sizing: border-box; }
+.frontendDemo button, .frontendDemo textarea, .frontendDemo input { font: inherit; }
+.frontendDemo button { cursor: pointer; }
+.frontendDemo button:focus-visible, .frontendDemo [role=button]:focus-visible, .frontendDemo input:focus-visible, .frontendDemo textarea:focus-visible, .galleryStage:focus-visible { outline: 2px solid #bfff3c; outline-offset: 4px; }
+.frontendDemo button:disabled { cursor: not-allowed; opacity: .42; }
+.galleryTop { display: flex; align-items: center; justify-content: space-between; padding: 0 0 1.2rem; gap: 1rem; }
+.galleryTop > span:first-child { font-size: .8125rem; letter-spacing: .11em; color: #bbb8c9; }
+.fieldMark { font-family: Georgia, serif; font-size: 2.5rem; letter-spacing: -.09em; line-height: 1; }
+.fieldMark span { font-family: Arial, sans-serif; font-size: .875rem; display: inline-block; vertical-align: top; padding: .2rem 0 0 .25rem; letter-spacing: 0; }
+.galleryTabs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.galleryTabs button { font-size: .875rem; border: 1px solid #30303d; border-radius: 100px; color: #bbb8c9; padding: .65rem 1rem; background: transparent; transition: background .2s, color .2s; }
+.galleryTabs button:hover { color: white; background: #1e1c29; }
+.galleryTabs button[aria-pressed=true] { background: #f1e8db; color: #322a26; border-color: #f1e8db; }
+.galleryStage { --scene-ink: #592f28; --scene-muted: #885b4c; background: #f2ddcb; color: var(--scene-ink); border-radius: 6px; overflow: hidden; position: relative; }
+.galleryStage[data-scene="1"] { --scene-ink: #243954; --scene-muted: #4d6b87; background: #c8dbe6; }
+.galleryStage[data-scene="2"] { --scene-ink: #e5eecf; --scene-muted: #b4c3a0; background: #21463d; }
+.galleryScene { min-height: 430px; display: grid; grid-template-columns: .82fr 1.18fr; }
+.galleryCopy { padding: 2.75rem 0 2rem 2.5rem; position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; }
+.galleryCategory { font-size: .8125rem; letter-spacing: .15em; color: var(--scene-muted); }
+.galleryCopy h3 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(2.25rem, 4.2vw, 3.5rem); line-height: 1.05; letter-spacing: -.065em; margin: 2.2rem 0 1.2rem; white-space: pre-line; }
+.galleryCopy p { color: var(--scene-muted); font-size: 1rem; line-height: 1.65; max-width: 17rem; }
+.galleryType { font-size: .8125rem; color: var(--scene-muted); margin-top: auto; padding-top: 1.5rem; }
+.galleryArt { display: grid; place-items: center; min-width: 0; overflow: hidden; }
+.artSvg { width: 112%; max-width: none; height: 100%; min-height: 350px; }
+.galleryFooter { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid currentColor; border-top-color: color-mix(in srgb, var(--scene-ink) 15%, transparent); padding: .8rem 1.4rem .8rem 2.5rem; gap: 1rem; }
+.galleryFooter > span { font-size: .875rem; }
+.galleryFooter > div { display: flex; gap: .5rem; }
+.galleryFooter button { width: 40px; height: 40px; border-radius: 50%; border: 1px solid currentColor; color: var(--scene-ink); background: transparent; display: grid; place-items: center; }
+.galleryFooter button:hover { background: #ffffff26; }
+.galleryFooter svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
+.demoFootnote { margin: .9rem 0 0; color: #9e9bab; font-size: .8125rem; line-height: 1.6; }
+.studioIntro { margin-bottom: 1.5rem; }
+.studioKicker { color: #bfff3c; font-size: .8125rem; letter-spacing: .13em; }
+.studioIntro h3 { font-size: clamp(1.65rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -.045em; font-weight: 600; margin: .7rem 0 .5rem; }
+.studioIntro p { color: #a8a4ba; font-size: 1rem; line-height: 1.6; margin: 0; }
+.springWorkspace { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1.5rem; }
+.springStage { min-height: 420px; position: relative; overflow: hidden; border-radius: 8px; border: 1px solid #30303c; background: radial-gradient(ellipse at 50% 52%, #262239 0%, #101018 64%); }
+.springGrid { position: absolute; inset: 0; background-image: radial-gradient(#7b739544 1px, transparent 1px); background-size: 24px 24px; mask-image: radial-gradient(ellipse, #000 40%, transparent 80%); }
+.springCrosshair { position: absolute; width: 210px; height: 210px; border-radius: 50%; border: 1px dashed #8b7cff38; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+.springCrosshair::before, .springCrosshair::after { position: absolute; content: ''; background: #8b7cff40; }
+.springCrosshair::before { width: 1px; height: 254px; top: -22px; left: 50%; }
+.springCrosshair::after { height: 1px; width: 254px; left: -22px; top: 50%; }
+.springCoordinates, .springStageTag { position: absolute; top: 1.2rem; font-size: .8125rem; font-family: ui-monospace, monospace; color: #9b94b1; }
+.springCoordinates { left: 1.2rem; }
+.springStageTag { right: 1.2rem; color: #7c758f; letter-spacing: .06em; }
+.springObject { width: 144px; height: 144px; position: absolute; left: calc(50% - 72px); top: calc(50% - 72px); border-radius: 34px; touch-action: none; cursor: grab; user-select: none; background: linear-gradient(145deg, #d9caff, #997bf0 43%, #634ab5); box-shadow: inset 0 1px 2px #f4eaff80, inset 0 -5px 10px #3e1b7d50, 0 24px 52px #05030966, 0 0 40px #987cff12; }
+.springObject:active { cursor: grabbing; }
+.springObjectInner { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 9px; border: 1px solid #ded2ff66; border-radius: inherit; }
+.springObjectInner svg { width: 60px; height: 60px; fill: none; stroke: #2d194d; stroke-width: 8; stroke-linecap: round; }
+.springObjectInner span { color: #2d194d; font-size: .875rem; font-weight: 600; }
+.springStageNote { position: absolute; bottom: 1.2rem; left: 1.2rem; right: 1.2rem; text-align: center; font-size: .8125rem; color: #9c94b0; pointer-events: none; }
+.springControls { min-width: 0; display: flex; flex-direction: column; gap: 1.4rem; padding-top: .25rem; }
+.presetButtons { display: flex; flex-wrap: wrap; gap: .4rem; }
+.presetButtons button, .springNudges button { background: #17151f; border: 1px solid #36313f; color: #bcb5d1; font-size: .875rem; border-radius: 8px; min-height: 40px; padding: .45rem .7rem; }
+.presetButtons button:hover, .springNudges button:hover { border-color: #8b7cff; color: #ded6ff; }
+.presetButtons button[aria-pressed=true] { color: #c9bbff; background: #8b7cff22; border-color: #8b7cff66; }
+.sliderLabel { display: flex; flex-direction: column; gap: .8rem; color: #c9c4d7; font-size: .875rem; min-width: 0; }
+.sliderLabel > span { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
+.sliderLabel output { font-size: .8125rem; font-variant-numeric: tabular-nums; color: #a39bb5; }
+.sliderLabel input { width: 100%; accent-color: #bfff3c; height: 20px; cursor: pointer; margin: 0; }
+.springNudges { display: grid; grid-template-columns: repeat(2, 1fr); gap: .45rem; }
+.springNudges button { min-height: 38px; }
+.springActions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.primaryButton, .secondaryButton { font-size: .875rem !important; padding: .7rem .95rem; border-radius: 8px; min-height: 42px; }
+.primaryButton { background: #bfff3c; color: #182306; border: 1px solid #bfff3c; font-weight: 600 !important; }
+.primaryButton:hover { background: #d0ff77; }
+.secondaryButton { background: transparent; color: #bbb6ca; border: 1px solid #36313f; }
+.secondaryButton:hover { background: #ffffff09; color: #fff; }
+.springFormula { margin-top: auto; padding: 1rem; background: #121018; border: 1px solid #292434; border-radius: 8px; }
+.springFormula span { display: block; font-family: Georgia, serif; font-style: italic; font-size: 1.5rem; color: #aca0c8; }
+.springFormula small { display: block; font-size: .8125rem; color: #90879f; margin-top: .5rem; }
+.typeWorkspace { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1.5rem; }
+.typePoster { container-type: inline-size; position: relative; display: flex; flex-direction: column; padding: 1.7rem; overflow: hidden; min-height: 530px; border-radius: 3px; background: var(--poster-bg); color: var(--poster-ink); transition: background .25s, color .25s; }
+.posterHeader { display: flex; align-items: center; justify-content: space-between; padding-bottom: 1.2rem; border-bottom: 1px solid currentColor; }
+.posterHeader span { font-size: .8125rem; font-weight: 600; letter-spacing: .1em; }
+.posterHeader svg { width: 29px; height: 29px; stroke: currentColor; fill: none; stroke-width: 2; }
+.posterBody { padding: 2rem 0 1.7rem; flex: 1; display: flex; flex-direction: column; gap: 1.5rem; justify-content: space-between; min-width: 0; }
+.posterHeadline { margin: 0; font-family: var(--font-body), Arial, Helvetica, sans-serif; font-size: clamp(2rem, var(--poster-fluid), var(--poster-size)); font-weight: var(--poster-weight); letter-spacing: var(--poster-tracking); line-height: .98; white-space: pre-wrap; overflow-wrap: anywhere; position: relative; z-index: 1; }
+.posterEmblem { height: 104px; width: 176px; position: relative; align-self: flex-end; margin-top: auto; }
+.posterEmblem i { position: absolute; width: 104px; height: 104px; border: 2px solid var(--poster-accent); border-radius: 50%; }
+.posterEmblem i:nth-child(2) { left: 24px; }
+.posterEmblem i:nth-child(3) { left: 48px; }
+.posterEmblem i:nth-child(4) { left: 72px; background: var(--poster-accent); }
+.posterFooter { display: flex; gap: 1.5rem; justify-content: space-between; border-top: 1px solid currentColor; padding-top: .9rem; }
+.posterFooter > span { font-size: .8125rem; max-width: 7.5rem; line-height: 1.6; font-weight: 600; }
+.posterFooter > p { font-size: .875rem; line-height: 1.45; margin: 0; max-width: 12rem; text-align: right; }
+.typePoster[data-layout=grid] { background-image: linear-gradient(color-mix(in srgb, var(--poster-ink) 12%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--poster-ink) 12%, transparent) 1px, transparent 1px); background-size: 42px 42px; }
+.typePoster[data-layout=grid] .posterBody { justify-content: center; }
+.typePoster[data-layout=grid] .posterHeadline { text-align: center; }
+.typePoster[data-layout=grid] .posterEmblem { align-self: center; margin-top: 1rem; transform: scale(.72); }
+.typeControls { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
+.textLabel { display: flex; flex-direction: column; gap: .55rem; color: #c9c4d7; font-size: .875rem; }
+.textLabel textarea { resize: vertical; min-height: 92px; max-height: 160px; width: 100%; background: #15121c; color: #e5e0ef; border: 1px solid #3a3348; border-radius: 8px; padding: .7rem; font-size: 1rem; line-height: 1.4; }
+.themeField { border: 0; margin: 0; padding: 0; min-width: 0; }
+.themeField legend { font-size: .875rem; color: #c9c4d7; margin-bottom: .55rem; padding: 0; }
+.themeField > div { display: flex; gap: .5rem; }
+.themeField button { width: 48px; height: 43px; border: 2px solid transparent; border-radius: 6px; position: relative; font-weight: 700; }
+.themeField button[aria-pressed=true] { outline: 1px solid #f4f0ff; outline-offset: 3px; }
+.themeField button svg { position: absolute; width: 12px; height: 12px; right: 1px; bottom: 1px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.layoutChoice { display: flex; gap: .5rem; }
+.layoutChoice button { flex: 1; background: transparent; border: 1px solid #393241; border-radius: 7px; font-size: .875rem; min-height: 38px; color: #aaa3bb; }
+.layoutChoice button[aria-pressed=true] { background: #8b7cff1a; color: #c4b8fc; border-color: #8b7cff66; }
+.copyFeedback { font-size: .8125rem; line-height: 1.5; color: #c3e592; min-height: 20px; }
+.cssFallback { display: flex; flex-direction: column; gap: .65rem; font-size: .875rem; color: #bbb5cd; margin-top: 1rem; }
+.cssFallback textarea { width: 100%; min-height: 200px; resize: vertical; background: #121019; border: 1px solid #3a3348; border-radius: 8px; padding: 1rem; color: #c3e592; font-family: ui-monospace, monospace; font-size: .875rem; }
+@media (max-width: 850px) {
+  .galleryCopy { padding-left: 1.7rem; }
+  .galleryCopy h3 { font-size: 2.5rem; }
+  .springWorkspace, .typeWorkspace { grid-template-columns: minmax(0, 1fr) 220px; gap: 1.1rem; }
+  .typePoster { padding: 1.3rem; }
+  .posterFooter { flex-direction: column; gap: .5rem; }
+  .posterFooter > span { max-width: none; }
+  .posterFooter > p { text-align: left; max-width: none; }
+}
+@media (max-width: 640px) {
+  .galleryTop { padding-bottom: 1rem; }
+  .galleryTop > span:first-child { max-width: 13rem; line-height: 1.6; letter-spacing: .05em; }
+  .galleryTabs { gap: .4rem; }
+  .galleryTabs button { padding: .55rem .75rem; }
+  .galleryScene { grid-template-columns: 1fr; min-height: auto; }
+  .galleryCopy { padding: 1.7rem 1.5rem .5rem; }
+  .galleryCopy h3 { font-size: clamp(2.25rem, 9vw, 3rem); margin-top: 1rem; white-space: normal; max-width: 18rem; }
+  .galleryCopy p { max-width: 24rem; }
+  .galleryType { padding-top: 1rem; }
+  .galleryArt { height: 285px; }
+  .artSvg { width: 100%; height: 320px; min-height: 0; }
+  .galleryFooter { padding-left: 1.5rem; }
+  .springWorkspace, .typeWorkspace { grid-template-columns: minmax(0, 1fr); }
+  .springStage { min-height: 360px; }
+  .springControls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 1rem; }
+  .presetButtons, .springActions, .springFormula { grid-column: 1 / -1; }
+  .springNudges { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .springNudges button { padding-inline: .3rem; }
+  .springFormula { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .8rem; }
+  .springFormula small { margin: 0; }
+  .typePoster { min-height: 460px; }
+  .typeControls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.3rem 1rem; }
+  .textLabel, .themeField, .layoutChoice, .copyFeedback { grid-column: 1 / -1; }
+  .typeControls .sliderLabel:nth-of-type(4) { grid-column: 1 / -1; }
+  .posterFooter { flex-direction: row; }
+  .posterFooter > span { max-width: 8rem; }
+  .posterFooter > p { max-width: 11rem; text-align: right; }
+}
+@media (max-width: 400px) {
+  .springStageTag { top: 3rem; right: auto; left: 1.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .frontendDemo *, .frontendDemo *::before, .frontendDemo *::after { transition-duration: 0s !important; }
+}

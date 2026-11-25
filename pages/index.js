@@ -7,6 +7,7 @@ import About from '../components/sections/About';
 import Skills from '../components/sections/Skills';
 import Experience from '../components/sections/Experience';
 import Projects from '../components/sections/Projects';
+import VisualLabSection from '../components/sections/VisualLabSection';
 import Contact from '../components/sections/Contact';
 import { SITE } from '../lib/site';
 
@@ -39,6 +40,7 @@ export default function Home() {
       <Skills />
       <Experience />
       <Projects />
+      <VisualLabSection />
       <Contact />
     </>
   );
